@@ -20,11 +20,16 @@ Desktop.ini
 # --- NetBeans / Ant build output
 build/
 dist/
-nbproject/private/
+nbproject/
 
 # NetBeans misc
 nbactions.xml
 nb-configuration.xml
+
+# NetBeans build scripts / metadata
+build.xml
+manifest.mf
+nbproject/build-impl.xml
 
 # --- IntelliJ IDEA
 .idea/
