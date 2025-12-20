@@ -1,0 +1,14 @@
+//#https://graphstream-project.org/doc/Advanced-Concepts/GraphStream-CSS-Reference/
+node{
+    size: 50px;
+    fill-color: white;
+    stroke-color: black;
+    stroke-mode: plain;
+    stroke-width: 4px;
+    text-size: 18px;
+    text-style: bold;
+}
+edge{    
+    arrow-size: 15px, 9px;
+    fill-color: darkgray;
+}

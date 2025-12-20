@@ -1,0 +1,503 @@
+{
+  "Constructs": [
+    {
+      "Name": "Team",
+      "From": "C1. Team ; C6. Silo",
+      "Scope": "IT department"
+    },
+    {
+      "Name": "Management",
+      "From": "C2. Management",
+      "Scope": "IT organization"
+    },
+    {
+      "Name": "Culture",
+      "From": "C3. Culture ; C6. Silo",
+      "Scope": "IT organization"
+    },
+    {
+      "Name": "Automation",
+      "From": "C4. Automation ; C5. Platform",
+      "Scope": "IT department"
+    },
+    {
+      "Name": "Interaction",
+      "From": "C7. Collaboration ; C8. Communication",
+      "Scope": "IT teams"
+    }
+   ],
+   "Universes": [
+    {
+      "Name": "Tty",
+      "Type": "Enum (Scalar)",
+      "ValueEnum": "product-team, bridge-team, enabler-team, development-team, operation-team",
+      "ValueMin": "1.7976931348623157E308",
+      "ValueMax": "4.9E-324",
+      "Function": "",
+      "Aridad": "0",
+      "Equal": "true",
+      "Greater": "false",
+      "Greater_equal": "false",
+      "Not_equal": "false",
+      "Less": "false",
+      "Less_equal": "false"
+    },
+    {
+      "Name": "Tau",
+      "Type": "Enum (Scalar)",
+      "ValueEnum": "dependent, self-organization",
+      "ValueMin": "1.7976931348623157E308",
+      "ValueMax": "4.9E-324",
+      "Function": "",
+      "Aridad": "0",
+      "Equal": "true",
+      "Greater": "true",
+      "Greater_equal": "false",
+      "Not_equal": "false",
+      "Less": "false",
+      "Less_equal": "false"
+    },
+    {
+      "Name": "Tag",
+      "Type": "Enum (Scalar)",
+      "ValueEnum": "local-optimization, product-thinking",
+      "ValueMin": "1.7976931348623157E308",
+      "ValueMax": "4.9E-324",
+      "Function": "",
+      "Aridad": "0",
+      "Equal": "true",
+      "Greater": "true",
+      "Greater_equal": "false",
+      "Not_equal": "false",
+      "Less": "false",
+      "Less_equal": "false"
+    },
+    {
+      "Name": "Tre",
+      "Type": "Real",
+      "ValueEnum": "null",
+      "ValueMin": "0.0",
+      "ValueMax": "10.0",
+      "Function": "",
+      "Aridad": "0",
+      "Equal": "true",
+      "Greater": "true",
+      "Greater_equal": "false",
+      "Not_equal": "false",
+      "Less": "false",
+      "Less_equal": "false"
+    },
+    {
+      "Name": "Tbo",
+      "Type": "Bool",
+      "ValueEnum": "null",
+      "ValueMin": "1.7976931348623157E308",
+      "ValueMax": "4.9E-324",
+      "Function": "",
+      "Aridad": "0",
+      "Equal": "true",
+      "Greater": "false",
+      "Greater_equal": "false",
+      "Not_equal": "false",
+      "Less": "false",
+      "Less_equal": "false"
+    },
+    {
+      "Name": "Tma",
+      "Type": "Enum (Scalar)",
+      "ValueEnum": "product-management, project-management",
+      "ValueMin": "1.7976931348623157E308",
+      "ValueMax": "4.9E-324",
+      "Function": "",
+      "Aridad": "0",
+      "Equal": "true",
+      "Greater": "false",
+      "Greater_equal": "false",
+      "Not_equal": "false",
+      "Less": "false",
+      "Less_equal": "false"
+    },
+    {
+      "Name": "Tcm",
+      "Type": "Enum (Scalar)",
+      "ValueEnum": "small-frequent, large-rare",
+      "ValueMin": "1.7976931348623157E308",
+      "ValueMax": "4.9E-324",
+      "Function": "",
+      "Aridad": "0",
+      "Equal": "true",
+      "Greater": "true",
+      "Greater_equal": "false",
+      "Not_equal": "false",
+      "Less": "false",
+      "Less_equal": "false"
+    },
+    {
+      "Name": "Tpr",
+      "Type": "Enum (Collection)",
+      "ValueEnum": "customer-centric-action, end-to-end-responsibility, automate-everything",
+      "ValueMin": "1.7976931348623157E308",
+      "ValueMax": "4.9E-324",
+      "Function": "",
+      "Aridad": "0",
+      "Equal": "true",
+      "Greater": "false",
+      "Greater_equal": "false",
+      "Not_equal": "false",
+      "Less": "false",
+      "Less_equal": "false"
+    },
+    {
+      "Name": "Tva",
+      "Type": "Enum (Collection)",
+      "ValueEnum": "communication, collaboration, transparency",
+      "ValueMin": "1.7976931348623157E308",
+      "ValueMax": "4.9E-324",
+      "Function": "",
+      "Aridad": "0",
+      "Equal": "true",
+      "Greater": "false",
+      "Greater_equal": "false",
+      "Not_equal": "false",
+      "Less": "false",
+      "Less_equal": "false"
+    },
+    {
+      "Name": "Tbp",
+      "Type": "Enum (Collection)",
+      "ValueEnum": "Continuous-integration, continuous-testing, continuous-delivery, continuous-deployment, continuous-monitoring, continuous-improvement, infrastructure-as-cod",
+      "ValueMin": "1.7976931348623157E308",
+      "ValueMax": "4.9E-324",
+      "Function": "",
+      "Aridad": "0",
+      "Equal": "true",
+      "Greater": "false",
+      "Greater_equal": "false",
+      "Not_equal": "false",
+      "Less": "false",
+      "Less_equal": "false"
+    },
+    {
+      "Name": "Tat",
+      "Type": "Enum (Scalar)",
+      "ValueEnum": "automated-infrastructure-management-interface,  automated-application-life-cycle-management-interface",
+      "ValueMin": "1.7976931348623157E308",
+      "ValueMax": "4.9E-324",
+      "Function": "",
+      "Aridad": "0",
+      "Equal": "true",
+      "Greater": "false",
+      "Greater_equal": "false",
+      "Not_equal": "false",
+      "Less": "false",
+      "Less_equal": "false"
+    },
+    {
+      "Name": "Tco",
+      "Type": "Enum (Scalar)",
+      "ValueEnum": "(Daily/High), (Eventual/Low), (Daily/Low), (Eventual/High)",
+      "ValueMin": "1.7976931348623157E308",
+      "ValueMax": "4.9E-324",
+      "Function": "",
+      "Aridad": "0",
+      "Equal": "true",
+      "Greater": "true",
+      "Greater_equal": "false",
+      "Not_equal": "false",
+      "Less": "false",
+      "Less_equal": "false"
+    }
+   ],
+   "Variables": [
+    {
+      "Name": "Type(team)",
+      "Nickname": "Tt",
+      "ConstructName": "Team",
+      "UniverseName": "Tty"
+    },
+    {
+      "Name": "Autonomy",
+      "Nickname": "Au",
+      "ConstructName": "Team",
+      "UniverseName": "Tau"
+    },
+    {
+      "Name": "Alignment-of-devOps-goals",
+      "Nickname": "Ag",
+      "ConstructName": "Team",
+      "UniverseName": "Tag"
+    },
+    {
+      "Name": "Responsibility/ownership-sharing",
+      "Nickname": "Rs",
+      "ConstructName": "Team",
+      "UniverseName": "Tre"
+    },
+    {
+      "Name": "Skills/knowledge-sharing",
+      "Nickname": "Ks",
+      "ConstructName": "Team",
+      "UniverseName": "Tre"
+    },
+    {
+      "Name": "Stack&tools-sharing",
+      "Nickname": "Ss",
+      "ConstructName": "Team",
+      "UniverseName": "Tre"
+    },
+    {
+      "Name": "Role-definition/attributions",
+      "Nickname": "Rd",
+      "ConstructName": "Team",
+      "UniverseName": "Tbo"
+    },
+    {
+      "Name": "Cross-functionality/skills",
+      "Nickname": "Cf",
+      "ConstructName": "Team",
+      "UniverseName": "Tbo"
+    },
+    {
+      "Name": "Silo(organizational)",
+      "Nickname": "So",
+      "ConstructName": "Team",
+      "UniverseName": "Tbo"
+    },
+    {
+      "Name": "Blame-management",
+      "Nickname": "Bm",
+      "ConstructName": "Team",
+      "UniverseName": "Tbo"
+    },
+    {
+      "Name": "Members",
+      "Nickname": "Me",
+      "ConstructName": "Management",
+      "UniverseName": "Tma"
+    },
+    {
+      "Name": "Metrics-visibility&feedback",
+      "Nickname": "Mv",
+      "ConstructName": "Management",
+      "UniverseName": "Tbo"
+    },
+    {
+      "Name": "Transfer-of-work-between-teams",
+      "Nickname": "Tw",
+      "ConstructName": "Management",
+      "UniverseName": "Tbo"
+    },
+    {
+      "Name": "Change-management",
+      "Nickname": "Ch",
+      "ConstructName": "Management",
+      "UniverseName": "Tcm"
+    },
+    {
+      "Name": "Principles",
+      "Nickname": "Pr",
+      "ConstructName": "Culture",
+      "UniverseName": "Tpr"
+    },
+    {
+      "Name": "Values",
+      "Nickname": "Va",
+      "ConstructName": "Culture",
+      "UniverseName": "Tva"
+    },
+    {
+      "Name": "Best-practices",
+      "Nickname": "Bp",
+      "ConstructName": "Culture",
+      "UniverseName": "Tbp"
+    },
+    {
+      "Name": "Silo(cultural)",
+      "Nickname": "Sc",
+      "ConstructName": "Culture",
+      "UniverseName": "Tbo"
+    },
+    {
+      "Name": "Platform",
+      "Nickname": "Pl",
+      "ConstructName": "Automation",
+      "UniverseName": "Tat"
+    },
+    {
+      "Name": "Automated-application-life-cycle-management",
+      "Nickname": "Aa",
+      "ConstructName": "Automation",
+      "UniverseName": "Tbo"
+    },
+    {
+      "Name": "Automated-infrastructure-management",
+      "Nickname": "Ai",
+      "ConstructName": "Automation",
+      "UniverseName": "Tbo"
+    },
+    {
+      "Name": "Platform-servicing",
+      "Nickname": "Ps",
+      "ConstructName": "Automation",
+      "UniverseName": "Tbo"
+    },
+    {
+      "Name": "Collaboration",
+      "Nickname": "Co",
+      "ConstructName": "Interaction",
+      "UniverseName": "Tco"
+    },
+    {
+      "Name": "Communication",
+      "Nickname": "Cm",
+      "ConstructName": "Interaction",
+      "UniverseName": "Tbo"
+    }
+  ],
+  "Implicaciones": [
+    {
+      "Literal1": "[Rs > 5]",
+      "Negado1": false,
+      "Literal2": "[Co > (Eventual/Low)]",
+      "Negado2": false
+    },
+    {
+      "Literal1": "[Co > (Eventual/Low)]",
+      "Negado1": false,
+      "Literal2": "[So = True]",
+      "Negado2": true
+    },
+    {
+      "Literal1": "[Co > (Eventual/Low)]",
+      "Negado1": false,
+      "Literal2": "[Aa = True]",
+      "Negado2": false
+    },
+    {
+      "Literal1": "[Aa = True]",
+      "Negado1": false,
+      "Literal2": "[Co > (Eventual/Low)]",
+      "Negado2": false
+    },
+    {
+      "Literal1": "[Ks > 5]",
+      "Negado1": false,
+      "Literal2": "[Co > (Eventual/Low)]",
+      "Negado2": false
+    },
+    {
+      "Literal1": "[Cf = True]",
+      "Negado1": false,
+      "Literal2": "[Co > (Eventual/Low)]",
+      "Negado2": false
+    },
+    {
+      "Literal1": "[Rd = True]",
+      "Negado1": false,
+      "Literal2": "[Co > (Eventual/Low)]",
+      "Negado2": true
+    },
+    {
+      "Literal1": "[Mv = True]",
+      "Negado1": false,
+      "Literal2": "[Co > (Eventual/Low)]",
+      "Negado2": false
+    },
+    {
+      "Literal1": "[Co > (Eventual/Low)]",
+      "Negado1": false,
+      "Literal2": "[Ag > local-optimization]",
+      "Negado2": false
+    },
+    {
+      "Literal1": "[Cf = True]",
+      "Negado1": false,
+      "Literal2": "[Rs > 5]",
+      "Negado2": false
+    },
+    {
+      "Literal1": "[Rs > 5]",
+      "Negado1": false,
+      "Literal2": "[So = True]",
+      "Negado2": true
+    },
+    {
+      "Literal1": "[Tt = enabler-team]",
+      "Negado1": false,
+      "Literal2": "[Rs > 5]",
+      "Negado2": false
+    },
+    {
+      "Literal1": "[Tt = bridge-team]",
+      "Negado1": false,
+      "Literal2": "[So = True]",
+      "Negado2": false
+    },
+    {
+      "Literal1": "[Au = self-organization]",
+      "Negado1": false,
+      "Literal2": "[Rs > 5]",
+      "Negado2": false
+    },
+    {
+      "Literal1": "[Rs > 5]",
+      "Negado1": false,
+      "Literal2": "[Cm = True]",
+      "Negado2": false
+    },
+    {
+      "Literal1": "[Rs > 5]",
+      "Negado1": true,
+      "Literal2": "[Tw = True]",
+      "Negado2": false
+    },
+    {
+      "Literal1": "[Tw = True]",
+      "Negado1": false,
+      "Literal2": "[Rs > 5]",
+      "Negado2": true
+    },
+    {
+      "Literal1": "[Ai = True]",
+      "Negado1": false,
+      "Literal2": "[Rs > 5]",
+      "Negado2": false
+    },
+    {
+      "Literal1": "[Aa = True]",
+      "Negado1": false,
+      "Literal2": "[Rs > 5]",
+      "Negado2": false
+    },
+    {
+      "Literal1": "[Cf = True]",
+      "Negado1": false,
+      "Literal2": "[Ks > 5]",
+      "Negado2": false
+    },
+    {
+      "Literal1": "[Tt = enabler-team]",
+      "Negado1": false,
+      "Literal2": "[Cf = True]",
+      "Negado2": false
+    },
+    {
+      "Literal1": "[Cf = True]",
+      "Negado1": false,
+      "Literal2": "[So = True]",
+      "Negado2": true
+    },
+    {
+      "Literal1": "[Cf = True]",
+      "Negado1": false,
+      "Literal2": "[Aa = True]",
+      "Negado2": false
+    },
+    {
+      "Literal1": "[So = True]",
+      "Negado1": false,
+      "Literal2": "[Aa = True]",
+      "Negado2": true
+    }
+  ]
+}

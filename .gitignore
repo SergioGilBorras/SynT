@@ -1,0 +1,76 @@
+############################################
+# SynT (TheoryBuildingSE) - Git ignore rules
+#
+# Goal: keep source + docs in Git; ignore build outputs, installers, and IDE
+# metadata (NetBeans, IntelliJ, VS Code, Eclipse).
+############################################
+
+# --- OS
+.DS_Store
+Thumbs.db
+Desktop.ini
+
+# --- Java build artifacts
+*.class
+*.jar
+*.war
+*.ear
+*.log
+
+# --- NetBeans / Ant build output
+build/
+dist/
+nbproject/private/
+
+# NetBeans misc
+nbactions.xml
+nb-configuration.xml
+
+# --- IntelliJ IDEA
+.idea/
+*.iml
+*.ipr
+*.iws
+out/
+
+# --- VS Code
+.vscode/
+
+# --- Eclipse
+.project
+.classpath
+.settings/
+
+# --- Maven / Gradle (just in case)
+/target/
+.gradle/
+
+# --- Local packaging / releases / installers
+# Legacy packaging folder (tools + binaries)
+software_genera_exe/
+
+# If you keep built MXI/ZIP releases locally
+releases/
+release/
+output/
+dist_installer/
+
+# Installers/artifacts
+*.msi
+*.exe
+*.zip
+
+# --- Generated sources / caches
+@Generated/
+*.tmp
+*.bak
+*.swp
+
+# --- Empty placeholder folders
+# Ignore empty test folder used as placeholder
+/test/
+
+# --- XML/IDE project metadata you don't want to version
+# (NetBeans project.xml/private files are already handled; keep build.xml if needed)
+
+# You can add more patterns below as your workflow evolves.
