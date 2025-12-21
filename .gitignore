@@ -12,14 +12,14 @@ Desktop.ini
 
 # --- Java build artifacts
 *.class
-*.jar
+#*.jar
 *.war
 *.ear
 *.log
 
 # --- NetBeans / Ant build output
 build/
-dist/
+#dist/
 nbproject/
 
 # NetBeans misc
