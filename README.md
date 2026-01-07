@@ -1,6 +1,6 @@
 # SynT (A software tool for automating the theory synthesis process)
 
-SynT is a desktop application that helps you **define a domain theory** (constructs, universes, variables and implications) and then **generate and explore different model representations** (tables, LaTeX matrices, graphs and CSV exports).
+SynT is a desktop application that allows users to enter elements generated during the operationalisation phase of a theory, constructs and hypotheses, and automatically generate the canonical set of hypotheses that represent that theory, thereby maintaining the principle of parsimony.
 
 This repository contains the NetBeans/Ant project `SynT`.
 
@@ -17,26 +17,28 @@ This repository contains the NetBeans/Ant project `SynT`.
 - [3. Data model concepts](#3-data-model-concepts)
 - [4. User guide (tab by tab)](#4-user-guide-tab-by-tab)
   - [4.1. Constructs tab](#41-constructs-tab)
-  - [4.2. Universes tab](#42-universes-tab)
-  - [4.3. Variables tab](#43-variables-tab)
-  - [4.4. Implications tab](#44-implications-tab)
-  - [4.5. Generation tab](#45-generation-tab)
-  - [4.6. About tab](#46-about-tab)
-  - [4.7. File menu (Load/Save)](#47-file-menu-loadsave)
-- [5. Tips & troubleshooting](#5-tips--troubleshooting)
+  - [4.2. Functions tab](#42-functions-tab)
+  - [4.3. Universes tab](#43-universes-tab)
+  - [4.4. Variables tab](#44-variables-tab)
+  - [4.5. Implications tab](#45-implications-tab)
+  - [4.6. Generation tab](#46-generation-tab)
+  - [4.7. About tab](#47-about-tab)
+  - [4.8. File menu (Load/Save)](#48-file-menu-loadsave)
+  - [5. Tips & troubleshooting](#5-tips--troubleshooting)
 
 ---
 
 ## 1. What is SynT?
 
-SynT is a software tool developed in an academic context (UPM) to support **the automatic synthesis of theories** from formal specifications.
+SynT is a software tool developed in an academic context (Universidad Politécnica de Madrid) to support the automatic synthesis of theories.
 
 With SynT you can:
 
 - Define **constructs**, **universes** and **variables**.
 - Define logical relationships as **implications**.
-- Generate several **model stages** (initial, reduced cycles, transitive closure, transitive reduction, expanded cycles).
-- Visualize results as **tables**, **graphs**, **LaTeX matrices**, or export to **CSV**.
+- Display the **canonical set** of resulting hypotheses as well as those that have been detected as redundant. 
+- Display this data in different formats: **tables**, **graphs**, **LaTeX matrices**, or export to **CSV**. In addition, the results of applying each of the steps defined by the algorithm to obtain the canonical set (initial, reduced cycles, transitive closure, transitive reduction, expanded cycles) can be displayed.
+
 
 ---
 
@@ -55,6 +57,10 @@ ant clean jar
 
 Then run the generated JAR from `dist/` (if your NetBeans build generates it there).
 
+```bash
+java -jar dist/SynT.jar
+```
+
 > Note: the exact output folder may depend on your NetBeans configuration.
 
 ---
@@ -64,7 +70,8 @@ Then run the generated JAR from `dist/` (if your NetBeans build generates it the
 SynT works with the following core concepts:
 
 - **Construct**: a high-level concept in your study domain.
-- **Universe**: defines a type and allowed relations/values (e.g., enum scalar, enum collection, real range, boolean).
+- **Universe**: defines a type, which includes the set of valid values and the relationships and functions for that type.
+- **Function**: a named operation with an arity (number of arguments ≥ 0). Functions are defined globally (Functions tab) and can be referenced by universes and used in literals if allowed by the universe.
 - **Variable**: a measurable/observable property, linked to a construct and a universe.
 - **Implication**: a directed relation between two literals (literal 1 → literal 2). Each literal is defined by:
   - a variable (by nickname)
@@ -91,12 +98,12 @@ Use this tab to define the constructs (domain concepts).
 **Buttons**
 
 - **Add / Save**
-  - **Add**: creates a new construct.
-  - **Save**: updates the selected construct when you are in *Edit* mode.
+  - **Add**: creates a new construct when you are in “Mode add”.
+  - **Save**: updates the selected construct when you are in “Mode edit”.
 - **Del**: deletes the selected construct from the list.
-- **Edit / Cancel**
-  - **Edit**: loads the selected construct into the fields and switches to *Save* mode.
-  - **Cancel**: exits edit mode and clears the fields.
+- **Mode edit / Mode add**
+  - **Mode edit**: loads the selected item into the fields and enables “Save”.
+  - **Mode add**: exits edit mode and clears the fields, enabling “Add”.
 - **<**: moves the selected construct up in the list.
 - **>**: moves the selected construct down in the list.
 - **Clear list**: removes all constructs.
@@ -107,7 +114,38 @@ Use this tab to define the constructs (domain concepts).
 
 ---
 
-### 4.2. Universes tab
+
+### 4.2. Functions tab
+
+Use this tab to define and manage functions that can be referenced by universes and when editing literals in Implications.
+
+**Fields**
+- **Function name**: unique function name.
+- **Arity**: number of arguments the function accepts (integer ≥ 0).
+
+**Buttons**
+- **Add / Save**
+  - **Add**: creates a new function when you are in “Mode add”.
+  - **Save**: updates the selected function when you are in “Mode edit”.
+- **Del**: deletes the selected function.
+- **Mode edit / Mode add**
+  - **Mode edit**: prepares the fields to edit the selected function and enables “Save”.
+  - **Mode add**: cancels editing and enables “Add”.
+- **< / >**: moves the selected function in the list.
+- **Clear list**: removes all functions.
+
+**List**
+- Shows all defined functions. These functions can be selected in literals (Implications) when the universe allows it.
+
+**Notes**
+- Function names must be unique. Arity is strictly validated in literal editors.
+- Arity 0 functions behave like constants.
+- The order of the list determines the display order in function selectors.
+
+---
+
+
+### 4.3. Universes tab
 
 Use this tab to define the universes (types + allowed relations/values).
 
@@ -136,12 +174,12 @@ Use this tab to define the universes (types + allowed relations/values).
 **Buttons**
 
 - **Add / Save**
-  - **Add**: creates a new universe.
-  - **Save**: updates the selected universe when you are in *Edit* mode.
+  - **Add**: creates a new universe when you are in “Mode add”.
+  - **Save**: updates the selected universe when you are in “Mode edit”.
 - **Del**: deletes the selected universe.
-- **Edit / Cancel**
-  - **Edit**: loads the selected universe into the fields and switches to *Save* mode.
-  - **Cancel**: exits edit mode and resets the fields.
+- **Mode edit / Mode add**
+  - **Mode edit**: loads the selected universe into the fields and enables “Save”.
+  - **Mode add**: exits edit mode and resets the fields, enabling “Add”.
 - **<**: moves the selected universe up.
 - **>**: moves the selected universe down.
 - **Clear list**: removes all universes.
@@ -150,9 +188,14 @@ Use this tab to define the universes (types + allowed relations/values).
 
 - Right-side list shows all universes.
 
+**Notes on functions**
+- Functions are defined globally in the “Functions” tab and referenced from universes and implications.
+- A function has a name and an arity (number of arguments). Its availability in a universe determines whether it can be used in literals of that universe.
+- For `Enum (Collection)` universes, functions may operate on collections if their semantics require it.
+
 ---
 
-### 4.3. Variables tab
+### 4.4. Variables tab
 
 Use this tab to define variables associated to constructs and universes.
 
@@ -166,12 +209,12 @@ Use this tab to define variables associated to constructs and universes.
 **Buttons**
 
 - **Add / Save**
-  - **Add**: creates a new variable.
-  - **Save**: updates the selected variable when you are in *Edit* mode.
+  - **Add**: creates a new variable when you are in “Mode add”.
+  - **Save**: updates the selected variable when you are in “Mode edit”.
 - **Del**: deletes the selected variable.
-- **Edit / Cancel**
-  - **Edit**: loads the selected variable into fields and switches to *Save* mode.
-  - **Cancel**: exits edit mode and clears the fields.
+- **Mode edit / Mode add**
+  - **Mode edit**: loads the selected variable into the fields and enables “Save”.
+  - **Mode add**: exits edit mode and clears the fields, enabling “Add”.
 - **<**: moves the selected variable up.
 - **>**: moves the selected variable down.
 - **Clear list**: removes all variables.
@@ -182,7 +225,8 @@ Use this tab to define variables associated to constructs and universes.
 
 ---
 
-### 4.4. Implications tab
+
+### 4.5. Implications tab
 
 Use this tab to create directed implications between two literals.
 
@@ -199,6 +243,7 @@ Each literal is defined by:
   - `Enum (Scalar)` and `Bool`: select a single value from a combo box.
   - `Enum (Collection)`: select multiple values using a checkable combo box.
   - `Real`: type a numeric value.
+  - You may also select a **Function** defined in the Functions tab if the literal’s universe allows it; in that case, the literal’s value is built from the function and its arguments.
 - **Negated**: checkbox to negate the literal.
 
 **Implication lists**
@@ -211,19 +256,25 @@ These two lists are synchronized: selecting an item in one selects the correspon
 **Buttons**
 
 - **Add / Save**
-  - **Add**: validates the two literals and adds a new implication.
-  - **Save**: updates the selected implication when you are in *Edit* mode.
+  - **Add**: validates both literals and adds a new implication when you are in “Mode add”.
+  - **Save**: updates the selected implication when you are in “Mode edit”.
 - **Del**: deletes the selected implication.
-- **Edit / Cancel**
-  - **Edit**: loads the selected implication into the literal controls and switches to *Save* mode.
-  - **Cancel**: exits edit mode and resets literal controls.
+- **Mode edit / Mode add**
+  - **Mode edit**: loads the selected implication into the literal controls and enables “Save”.
+  - **Mode add**: exits edit mode and resets the literal controls, enabling “Add”.
 - **<**: moves the selected implication up.
 - **>**: moves the selected implication down.
 - **Clear list**: removes all implications.
 
+**Function usage in literals**
+- If the universe allows functions, you can toggle between “Value” and “Function” in the literal editor.
+- When “Function” is selected, choose a function by name and provide its arguments according to its arity. Arguments must be compatible with the universe type (e.g., enum values or real numbers).
+- Functions are validated by arity and availability in the selected universe; otherwise, saving the implication is blocked.
+- Example: for a `Real` universe, a unary function `abs(x)` is valid; for an `Enum (Collection)` universe, a function like `containsAny(A, {a,b})` may apply if enabled in that universe.
+
 ---
 
-### 4.5. Generation tab
+### 4.6. Generation tab
 
 Use this tab to generate and visualize the model.
 
@@ -240,9 +291,9 @@ SynT enables/disables options depending on whether cycles exist in the model.
 **Format** (left group)
 
 - **Table**: open a table view of the matrix.
-- **Latex**: append a LaTeX representation to the text area.
+- **LaTeX**: append a LaTeX representation to the text area.
 - **Graph**: open a graph view.
-- **Excel (csv)**: export a CSV file.
+- **Excel (CSV)**: export a CSV file.
 
 **Buttons**
 
@@ -255,13 +306,13 @@ SynT enables/disables options depending on whether cycles exist in the model.
 
 ---
 
-### 4.6. About tab
+### 4.7. About tab
 
 Shows version and authors and a short description of the tool.
 
 ---
 
-### 4.7. File menu (Load/Save)
+### 4.8. File menu (Load/Save)
 
 The menu `File` provides:
 
@@ -278,6 +329,15 @@ The `.sgb` file contains a JSON representation of constructs, universes, variabl
 - **Nicknames** must be unique because implications reference variables by nickname.
 - If you edit constructs/universes/variables/implications, regenerate the model again in the **Generation** tab.
 - If you are using `Enum (Collection)`, remember that values are selected in a checkable combo box (multiple selections).
+- If you use functions in Implications:
+  - Verify that the function is defined and has the correct arity in the Functions tab.
+  - Ensure that the literal’s universe allows the use of that function.
+  - Provide arguments compatible with the universe type.
+- **Validation rules**:
+  - Names cannot be empty; nicknames must be unique.
+  - Function arity must be an integer ≥ 0.
+  - For `Real` universes, min value must be ≤ max value.
+  - Enum values are trimmed; duplicates are ignored.
 
 ---
 
@@ -291,4 +351,4 @@ This project is licensed under **Creative Commons Attribution-NonCommercial 4.0 
 
 Suggested attribution:
 
-> SynT (A software tool for automating the theory synthesis process) — Authors: Sergio Gil Borrás, Jorge Pérez Martinez, Jéssica Díaz Fernández, Ángel González Prieto.
+> SynT (A software tool for automating the theory synthesis process) — Authors: Sergio Gil Borrás, Jorge Enrique Pérez Martinez, Jéssica Díaz Fernández, Ángel González Prieto.

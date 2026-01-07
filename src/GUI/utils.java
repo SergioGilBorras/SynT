@@ -12,6 +12,7 @@ import java.util.Queue;
 import javax.swing.DefaultListModel;
 import models.ColElements;
 import models.Construct;
+import models.Function;
 import models.Implication;
 import models.Universe;
 import models.Variable;
@@ -21,8 +22,8 @@ import theorybuildingse.TransitiveClosure;
 import theorybuildingse.TransitiveReduction;
 
 /**
- * Utility class for building and analysing the implication model matrices
- * used by SynT.
+ * Utility class for building and analysing the implication model matrices used
+ * by SynT.
  * <p>
  * This class keeps static state for the current node lists and matrices and
  * provides helpers to generate adjacency matrices, compute transitive
@@ -47,8 +48,8 @@ public class utils {
      */
     private static List<int[][]> matrices;
     /**
-     * Last error message produced during matrix generation, or {@code null}
-     * if no error occurred.
+     * Last error message produced during matrix generation, or {@code null} if
+     * no error occurred.
      */
     private static String error;
     /**
@@ -60,7 +61,7 @@ public class utils {
      * Returns the list of all nodes of the current model.
      *
      * @return the list of node labels, or {@code null} if no model has been
-     *         generated yet
+     * generated yet
      */
     public static List<String> getNodos() {
         return nodos;
@@ -70,7 +71,7 @@ public class utils {
      * Returns the list of reduced nodes after cycle fusion.
      *
      * @return the list of reduced node labels, or {@code null} if cycles were
-     *         not detected or the model has not been generated
+     * not detected or the model has not been generated
      */
     public static List<String> getNodosReducidos() {
         return nodosReducidos;
@@ -80,7 +81,7 @@ public class utils {
      * Returns the list of generated matrices for the current model.
      *
      * @return an ordered list of adjacency matrices, or {@code null} if none
-     *         have been generated
+     * have been generated
      */
     public static List<int[][]> getListMatrices() {
         return matrices;
@@ -150,16 +151,16 @@ public class utils {
      * <p>
      * This method builds the initial adjacency matrix from the literals and
      * their negation flags, detects cycles and then delegates to either
-     * {@link #generadorConCiclos(List)} or {@link #generadorSinCiclos(List)}
-     * to compute the subsequent matrices.
+     * {@link #generadorConCiclos(List)} or {@link #generadorSinCiclos(List)} to
+     * compute the subsequent matrices.
      * </p>
      *
-     * @param listModelLiterales1       list of literal 1 strings
-     * @param listModelLiterales2       list of literal 2 strings
+     * @param listModelLiterales1 list of literal 1 strings
+     * @param listModelLiterales2 list of literal 2 strings
      * @param listModelImplicacionesNot1 list of negation flags for literal 1
      * @param listModelImplicacionesNot2 list of negation flags for literal 2
      * @return the list of generated matrices, or {@code null} if there is not
-     *         enough content to build a model
+     * enough content to build a model
      */
     public static List<int[][]> generarMatrices(DefaultListModel<String> listModelLiterales1,
             DefaultListModel<String> listModelLiterales2, DefaultListModel<String> listModelImplicacionesNot1,
@@ -198,9 +199,9 @@ public class utils {
     /**
      * Generates matrices for models that contain cycles.
      * <p>
-     * The sequence is: initial matrix, cycle-fused matrix, transitive
-     * closure, transitive reduction on the reduced graph and finally a
-     * matrix with cycles restored.
+     * The sequence is: initial matrix, cycle-fused matrix, transitive closure,
+     * transitive reduction on the reduced graph and finally a matrix with
+     * cycles restored.
      * </p>
      *
      * @param matrices the list where the new matrices will be appended
@@ -239,16 +240,16 @@ public class utils {
     }
 
     /**
-     * Builds the list of all nodes (literals with optional negation) present
-     * in the implication lists.
+     * Builds the list of all nodes (literals with optional negation) present in
+     * the implication lists.
      * <p>
-     * For each literal, both its negated and non-negated forms are added to
-     * the list if they were not present already. The resulting list is then
-     * sorted lexicographically.
+     * For each literal, both its negated and non-negated forms are added to the
+     * list if they were not present already. The resulting list is then sorted
+     * lexicographically.
      * </p>
      *
-     * @param listModelLiterales1       list of literal 1 strings
-     * @param listModelLiterales2       list of literal 2 strings
+     * @param listModelLiterales1 list of literal 1 strings
+     * @param listModelLiterales2 list of literal 2 strings
      * @param listModelImplicacionesNot1 list of negation flags for literal 1
      * @param listModelImplicacionesNot2 list of negation flags for literal 2
      * @return a sorted list of all node labels
@@ -285,15 +286,17 @@ public class utils {
      * Serializes the current model (constructs, universes, variables and
      * implications) to a JSON string.
      *
-     * @param colConstructs            collection of constructs
-     * @param colUniverses             collection of universes
-     * @param colVariables             collection of variables
-     * @param colImplications          collection of implications
+     * @param colConstructs collection of constructs
+     * @param colUniverses collection of universes
+     * @param colVariables collection of variables
+     * @param colImplications collection of implications
+     * @param colFunctions collection of functions
      * @return a JSON document representing the full SynT model
      */
     public static String generarJSON(
-            ColElements<Construct> colConstructs, ColElements<Universe> colUniverses, 
-            ColElements<Variable> colVariables,   ColElements<Implication> colImplications
+            ColElements<Construct> colConstructs, ColElements<Universe> colUniverses,
+            ColElements<Variable> colVariables, ColElements<Implication> colImplications,
+            ColElements<Function> colFunctions
     ) {
         StringBuilder JSON = new StringBuilder("""
                 {
@@ -307,13 +310,37 @@ public class utils {
                 JSON.append("    }\n");
             }
         }
+        /* //////////////////// Functions //////////////////////////////////////////////// */
+        JSON.append("""
+                   ],
+                   "Functions": [
+                """);
+        for (int i = 0; i < colFunctions.size(); i++) {
+            JSON.append("    {\n" + "      \"Name\": \"").append(colFunctions.getModelElement().get(i).getName()).append("\",\n").append("      \"Aridad\": \"").append(colFunctions.getModelElement().get(i).getAridad()).append("\"\n");
+            if (i != colFunctions.size() - 1) {
+                JSON.append("    },\n");
+            } else {
+                JSON.append("    }\n");
+            }
+        }
         /* //////////////////// Universes //////////////////////////////////////////////// */
         JSON.append("""
                    ],
                    "Universes": [
                 """);
         for (int i = 0; i < colUniverses.size(); i++) {
-            JSON.append("    {\n" + "      \"Name\": \"").append(colUniverses.getModelElement().get(i).getName()).append("\",\n").append("      \"Type\": \"").append(colUniverses.getModelElement().get(i).getType()).append("\",\n").append("      \"ValueEnum\": \"").append(colUniverses.getModelElement().get(i).getValueEnum()).append("\",\n").append("      \"ValueMin\": \"").append(colUniverses.getModelElement().get(i).getValueMin()).append("\",\n").append("      \"ValueMax\": \"").append(colUniverses.getModelElement().get(i).getValueMax()).append("\",\n").append("      \"Function\": \"").append(colUniverses.getModelElement().get(i).getFunction()).append("\",\n").append("      \"Aridad\": \"").append(colUniverses.getModelElement().get(i).getAridad()).append("\",\n").append("      \"Equal\": \"").append(colUniverses.getModelElement().get(i).isEqual()).append("\",\n").append("      \"Greater\": \"").append(colUniverses.getModelElement().get(i).isGreater()).append("\",\n").append("      \"Greater_equal\": \"").append(colUniverses.getModelElement().get(i).isGreater_equal()).append("\",\n").append("      \"Not_equal\": \"").append(colUniverses.getModelElement().get(i).isNot_equal()).append("\",\n").append("      \"Less\": \"").append(colUniverses.getModelElement().get(i).isLess()).append("\",\n").append("      \"Less_equal\": \"").append(colUniverses.getModelElement().get(i).isLess_equal()).append("\"\n");
+            JSON.append("    {\n" + "      \"Name\": \"").append(colUniverses.getModelElement().get(i).getName()).append("\",\n").append("      \"Type\": \"").append(colUniverses.getModelElement().get(i).getType()).append("\",\n").append("      \"ValueEnum\": \"").append(colUniverses.getModelElement().get(i).getValueEnum()).append("\",\n").append("      \"ValueMin\": \"").append(colUniverses.getModelElement().get(i).getValueMin()).append("\",\n").append("      \"ValueMax\": \"").append(colUniverses.getModelElement().get(i).getValueMax()).append("\",\n").append("      \"Equal\": \"").append(colUniverses.getModelElement().get(i).isEqual()).append("\",\n").append("      \"Greater\": \"").append(colUniverses.getModelElement().get(i).isGreater()).append("\",\n").append("      \"Greater_equal\": \"").append(colUniverses.getModelElement().get(i).isGreater_equal()).append("\",\n").append("      \"Not_equal\": \"").append(colUniverses.getModelElement().get(i).isNot_equal()).append("\",\n").append("      \"Less\": \"").append(colUniverses.getModelElement().get(i).isLess()).append("\",\n").append("      \"Less_equal\": \"").append(colUniverses.getModelElement().get(i).isLess_equal()).append("\",\n").append("      \"Functions\": [\n");
+            ArrayList<Function> ALFunction = colUniverses.getModelElement().get(i).getFunctions();
+            for (int j = 0; j < ALFunction.size(); j++) {
+                JSON.append("            {\n            \"Name\": \"").append(ALFunction.get(j).getName()).append("\",\n");
+                JSON.append("            \"Aridad\": \"").append(ALFunction.get(j).getAridad()).append("\"\n");
+                if (j != ALFunction.size() - 1) {
+                    JSON.append("            },\n");
+                } else {
+                    JSON.append("            }\n");
+                }
+            }
+            JSON.append("\n      ]\n");
             if (i != colUniverses.size() - 1) {
                 JSON.append("    },\n");
             } else {
@@ -338,16 +365,18 @@ public class utils {
                   ],
                   "Implications": [
                 """);
-        
+
         for (int i = 0; i < colImplications.size(); i++) {
             JSON.append("    {\n" + "      \"Variable1\": \"").append(colImplications.getModelElement().get(i).getVariable1().getNickname()).append("\",\n");
             JSON.append("      \"Relation1\": \"").append(colImplications.getModelElement().get(i).getRelation1()).append("\",\n");
             JSON.append("      \"Value1\": \"").append(colImplications.getModelElement().get(i).getValue1()).append("\",\n");
             JSON.append("      \"Negated1\": \"").append(colImplications.getModelElement().get(i).isNegated1()).append("\",\n");
+            JSON.append("      \"ValueFunction1\": \"").append(colImplications.getModelElement().get(i).isValueFunction1()).append("\",\n");
             JSON.append("      \"Variable2\": \"").append(colImplications.getModelElement().get(i).getVariable2().getNickname()).append("\",\n");
             JSON.append("      \"Relation2\": \"").append(colImplications.getModelElement().get(i).getRelation2()).append("\",\n");
             JSON.append("      \"Value2\": \"").append(colImplications.getModelElement().get(i).getValue2()).append("\",\n");
             JSON.append("      \"Negated2\": \"").append(colImplications.getModelElement().get(i).isNegated2()).append("\",\n");
+            JSON.append("      \"ValueFunction2\": \"").append(colImplications.getModelElement().get(i).isValueFunction2()).append("\"\n");
             if (i != colImplications.size() - 1) {
                 JSON.append("    },\n");
             } else {
@@ -367,7 +396,7 @@ public class utils {
      * </p>
      *
      * @param matrizL the adjacency matrix
-     * @param nodosL  the list of node labels corresponding to rows/columns
+     * @param nodosL the list of node labels corresponding to rows/columns
      * @return the CSV representation as a string
      */
     public static String generarTablaCSV(int[][] matrizL, List<String> nodosL) {
@@ -391,15 +420,15 @@ public class utils {
      * given matrix.
      * <p>
      * The search is performed with a breadth-first search (BFS) over the
-     * implicit graph defined by the matrix, where an edge is considered
-     * present if either {@code matriz[a][b] > 0} or {@code matriz[b][a] > 0}.
+     * implicit graph defined by the matrix, where an edge is considered present
+     * if either {@code matriz[a][b] > 0} or {@code matriz[b][a] > 0}.
      * </p>
      *
      * @param matriz the adjacency matrix
-     * @param nodo1  the index of the source node
-     * @param nodo2  the index of the target node
+     * @param nodo1 the index of the source node
+     * @param nodo2 the index of the target node
      * @return {@code true} if there is a path between {@code nodo1} and
-     *         {@code nodo2}; {@code false} otherwise
+     * {@code nodo2}; {@code false} otherwise
      */
     public static boolean estanConectadosNodos(int[][] matriz, int nodo1, int nodo2) {
         if (nodo1 == nodo2) {

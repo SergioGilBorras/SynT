@@ -35,6 +35,11 @@ public class Implication implements Element {
      * Whether literal 1 is negated.
      */
     private boolean negated1;
+    
+    /**
+     * Whether literal 1 is Value or Function.
+     */
+    private boolean valueFunction1;
 
     /**
      * Right-hand side variable (literal 2) of the implication.
@@ -56,6 +61,10 @@ public class Implication implements Element {
      * Whether literal 2 is negated.
      */
     private boolean negated2;
+    /**
+     * Whether literal 2 is Value or Function.
+     */
+    private boolean valueFunction2;
 
     /**
      * Creates a new implication between two literals.
@@ -64,20 +73,24 @@ public class Implication implements Element {
      * @param relation1 relation operator for literal 1
      * @param value1 value for literal 1
      * @param negated1 whether literal 1 is negated
+     * @param valueFunction1    whether value 1 is value (true) or function (false)
      * @param variable2 right-hand variable (literal 2)
      * @param relation2 relation operator for literal 2
      * @param value2 value for literal 2
      * @param negated2 whether literal 2 is negated
+     * @param valueFunction2    whether value 2 is value (true) or function (false)
      */
-    public Implication(Variable variable1, String relation1, String value1, boolean negated1, Variable variable2, String relation2, String value2, boolean negated2) {
+    public Implication(Variable variable1, String relation1, String value1, boolean negated1, boolean valueFunction1, Variable variable2, String relation2, String value2, boolean negated2, boolean valueFunction2) {
         this.variable1 = variable1;
         this.relation1 = relation1.trim();
         this.value1 = value1.trim();
         this.negated1 = negated1;
+        this.valueFunction1 = valueFunction1;
         this.variable2 = variable2;
         this.relation2 = relation2.trim();
         this.value2 = value2.trim();
         this.negated2 = negated2;
+        this.valueFunction2 = valueFunction2;
     }
 
     /**
@@ -115,6 +128,15 @@ public class Implication implements Element {
     public void setNegated1(boolean negated1) {
         this.negated1 = negated1;
     }
+    
+    /**
+     * Sets whether value 1 is value (true) or function (false)
+     *
+     * @param valueFunction1 {@code true} if value; otherwise {@code false}
+     */
+    public void setValueFunction1(boolean valueFunction1) {
+        this.valueFunction1 = valueFunction1;
+    }
 
     /**
      * Sets the right-hand variable (literal 2).
@@ -150,6 +172,15 @@ public class Implication implements Element {
      */
     public void setNegated2(boolean negated2) {
         this.negated2 = negated2;
+    }
+    
+    /**
+     * Sets whether value 2 is value (true) or function (false)
+     *
+     * @param valueFunction2 {@code true} if value; otherwise {@code false}
+     */
+    public void setValueFunction2(boolean valueFunction2) {
+        this.valueFunction2 = valueFunction2;
     }
 
     /**
@@ -189,6 +220,15 @@ public class Implication implements Element {
     }
 
     /**
+     * Indicates whether value 1 is value (true) or function (false).
+     *
+     * @return {@code true} if valueFunction 1 is value; otherwise {@code false}
+     */
+    public boolean isValueFunction1() {
+        return valueFunction1;
+    }
+
+    /**
      * Returns the right-hand variable (literal 2).
      *
      * @return the variable for literal 2
@@ -224,6 +264,15 @@ public class Implication implements Element {
         return negated2;
     }
 
+    /**
+     * Indicates whether value 2 is value (true) or function (false).
+     *
+     * @return {@code true} if valueFunction 2 is value; otherwise {@code false}
+     */
+    public boolean isValueFunction2() {
+        return valueFunction2;
+    }
+    
     /**
      * Returns a name for this element.
      * <p>

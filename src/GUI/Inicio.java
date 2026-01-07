@@ -5,6 +5,9 @@
 package GUI;
 
 import java.awt.*;
+import java.awt.event.MouseAdapter;
+import java.awt.event.MouseEvent;
+import java.awt.event.MouseListener;
 import java.io.BufferedWriter;
 import java.io.File;
 import java.io.FileWriter;
@@ -15,7 +18,10 @@ import java.util.List;
 import java.util.Objects;
 import java.util.concurrent.atomic.AtomicBoolean;
 import javax.swing.*;
+import javax.swing.event.PopupMenuEvent;
+import javax.swing.event.PopupMenuListener;
 import javax.swing.filechooser.FileNameExtensionFilter;
+import javax.swing.plaf.basic.ComboPopup;
 
 import models.*;
 import org.graphstream.ui.view.Viewer;
@@ -27,6 +33,7 @@ import theorybuildingse.dibujaGrafos;
 import GUI.Componets.CheckComboItem;
 import GUI.Componets.CheckComboRenderer;
 import java.util.ArrayList;
+import java.util.concurrent.atomic.AtomicReference;
 
 /**
  * Main Swing frame for SynT, a tool for automating the theory synthesis
@@ -43,6 +50,11 @@ public class Inicio extends javax.swing.JFrame {
      * Collection of all constructs currently defined in the session.
      */
     ColElements<Construct> colConstruct = new ColElements<>();
+
+    /**
+     * Collection of all functions currently defined in the session.
+     */
+    ColElements<Function> colFunction = new ColElements<>();
 
     /**
      * Collection of all universes currently defined in the session.
@@ -121,6 +133,10 @@ public class Inicio extends javax.swing.JFrame {
      * Combo box model with all universe names, used when defining variables.
      */
     DefaultComboBoxModel<String> CombolistModelUniverses = new DefaultComboBoxModel<>();
+    /**
+     * Combo box model with all functions, used when defining universes.
+     */
+    DefaultComboBoxModel<CheckComboItem> CombolistModelFunctions = new DefaultComboBoxModel<>();
 
     /**
      * Currently selected index in the Constructs list.
@@ -129,6 +145,14 @@ public class Inicio extends javax.swing.JFrame {
      * </p>
      */
     int selectedIndexConstruct = -1;
+
+    /**
+     * Currently selected index in the Function list.
+     * <p>
+     * A value of {@code -1} indicates that nothing is selected.
+     * </p>
+     */
+    int selectedIndexFunctions = -1;
 
     /**
      * Currently selected index in the Variables list.
@@ -180,7 +204,8 @@ public class Inicio extends javax.swing.JFrame {
 
         buttonGroup1 = new javax.swing.ButtonGroup();
         buttonGroup2 = new javax.swing.ButtonGroup();
-        jLabel28 = new javax.swing.JLabel();
+        buttonGroup3 = new javax.swing.ButtonGroup();
+        buttonGroup4 = new javax.swing.ButtonGroup();
         jTabbedPane1 = new javax.swing.JTabbedPane();
         jPanel4 = new javax.swing.JPanel();
         jTextField6 = new javax.swing.JTextField();
@@ -198,13 +223,24 @@ public class Inicio extends javax.swing.JFrame {
         jList3 = new javax.swing.JList<>();
         jLabel17 = new javax.swing.JLabel();
         jButton23 = new javax.swing.JButton();
+        jPanel15 = new javax.swing.JPanel();
+        jTextField16 = new javax.swing.JTextField();
+        jLabel33 = new javax.swing.JLabel();
+        jTextField17 = new javax.swing.JTextField();
+        jButton27 = new javax.swing.JButton();
+        jButton28 = new javax.swing.JButton();
+        jButton29 = new javax.swing.JButton();
+        jButton30 = new javax.swing.JButton();
+        jButton31 = new javax.swing.JButton();
+        jButton32 = new javax.swing.JButton();
+        jScrollPane8 = new javax.swing.JScrollPane();
+        jList6 = new javax.swing.JList<>();
+        jLabel34 = new javax.swing.JLabel();
+        jLabel35 = new javax.swing.JLabel();
         jPanel5 = new javax.swing.JPanel();
         jTextField9 = new javax.swing.JTextField();
         jLabel18 = new javax.swing.JLabel();
         jLabel19 = new javax.swing.JLabel();
-        jTextField10 = new javax.swing.JTextField();
-        jLabel20 = new javax.swing.JLabel();
-        jTextField11 = new javax.swing.JTextField();
         jButton18 = new javax.swing.JButton();
         jButton19 = new javax.swing.JButton();
         jButton20 = new javax.swing.JButton();
@@ -235,6 +271,7 @@ public class Inicio extends javax.swing.JFrame {
         jCheckBox8 = new javax.swing.JCheckBox();
         jSeparator3 = new javax.swing.JSeparator();
         jButton24 = new javax.swing.JButton();
+        jComboBox8 = new JComboBox<CheckComboItem>();
         jPanel1 = new javax.swing.JPanel();
         jTextField1 = new javax.swing.JTextField();
         jButton1 = new javax.swing.JButton();
@@ -258,13 +295,11 @@ public class Inicio extends javax.swing.JFrame {
         jLabel5 = new javax.swing.JLabel();
         jLabel6 = new javax.swing.JLabel();
         jComboBox2 = new javax.swing.JComboBox<>();
-        jLabel7 = new javax.swing.JLabel();
         jSeparator1 = new javax.swing.JSeparator();
         jLabel8 = new javax.swing.JLabel();
         jComboBox3 = new javax.swing.JComboBox<>();
         jComboBox4 = new javax.swing.JComboBox<>();
         jLabel9 = new javax.swing.JLabel();
-        jLabel10 = new javax.swing.JLabel();
         jScrollPane2 = new javax.swing.JScrollPane();
         jList2 = new javax.swing.JList<>();
         jButton6 = new javax.swing.JButton();
@@ -285,6 +320,8 @@ public class Inicio extends javax.swing.JFrame {
         jTextField4 = new javax.swing.JTextField();
         jPanel14 = new javax.swing.JPanel();
         jComboBox11 = new JComboBox<CheckComboItem>();
+        jPanel21 = new javax.swing.JPanel();
+        jComboBox15 = new javax.swing.JComboBox<>();
         jPanel18 = new javax.swing.JPanel();
         jPanel16 = new javax.swing.JPanel();
         jComboBox12 = new javax.swing.JComboBox<>();
@@ -292,9 +329,15 @@ public class Inicio extends javax.swing.JFrame {
         jTextField15 = new javax.swing.JTextField();
         jPanel19 = new javax.swing.JPanel();
         jComboBox13 = new JComboBox<CheckComboItem>();
+        jPanel20 = new javax.swing.JPanel();
+        jComboBox14 = new javax.swing.JComboBox<>();
         jLabel31 = new javax.swing.JLabel();
         jLabel32 = new javax.swing.JLabel();
         jButton26 = new javax.swing.JButton();
+        jRadioButton10 = new javax.swing.JRadioButton();
+        jRadioButton11 = new javax.swing.JRadioButton();
+        jRadioButton12 = new javax.swing.JRadioButton();
+        jRadioButton13 = new javax.swing.JRadioButton();
         jPanel3 = new javax.swing.JPanel();
         jRadioButton1 = new javax.swing.JRadioButton();
         jRadioButton3 = new javax.swing.JRadioButton();
@@ -320,8 +363,6 @@ public class Inicio extends javax.swing.JFrame {
         jMenuItem1 = new javax.swing.JMenuItem();
         jMenuItem2 = new javax.swing.JMenuItem();
 
-        jLabel28.setText("jLabel28");
-
         setDefaultCloseOperation(javax.swing.WindowConstants.EXIT_ON_CLOSE);
         setTitle("SynT - A software tool for automating the theory synthesis process");
 
@@ -333,7 +374,7 @@ public class Inicio extends javax.swing.JFrame {
 
         jLabel14.setText("Name");
 
-        jLabel15.setText("From (Separated by ',')");
+        jLabel15.setText("From (Separated by ';')");
 
         jLabel16.setText("Scope-conditions");
 
@@ -373,12 +414,13 @@ public class Inicio extends javax.swing.JFrame {
         });
 
         jList3.setModel(colConstruct.getModel());
+        jList3.setSelectionMode(javax.swing.ListSelectionModel.SINGLE_SELECTION);
         jScrollPane4.setViewportView(jList3);
 
         jLabel17.setBackground(new java.awt.Color(222, 222, 222));
         jLabel17.setForeground(new java.awt.Color(255, 51, 102));
 
-        jButton23.setText("Edit");
+        jButton23.setText("Mode edit");
         jButton23.addActionListener(new java.awt.event.ActionListener() {
             public void actionPerformed(java.awt.event.ActionEvent evt) {
                 jButton23ActionPerformed(evt);
@@ -452,11 +494,130 @@ public class Inicio extends javax.swing.JFrame {
 
         jTabbedPane1.addTab("Constructs", jPanel4);
 
+        jLabel33.setText("Function name");
+
+        jButton27.setText("Add");
+        jButton27.addActionListener(new java.awt.event.ActionListener() {
+            public void actionPerformed(java.awt.event.ActionEvent evt) {
+                jButton27ActionPerformed(evt);
+            }
+        });
+
+        jButton28.setText("Del");
+        jButton28.addActionListener(new java.awt.event.ActionListener() {
+            public void actionPerformed(java.awt.event.ActionEvent evt) {
+                jButton28ActionPerformed(evt);
+            }
+        });
+
+        jButton29.setText("Mode edit");
+        jButton29.addActionListener(new java.awt.event.ActionListener() {
+            public void actionPerformed(java.awt.event.ActionEvent evt) {
+                jButton29ActionPerformed(evt);
+            }
+        });
+
+        jButton30.setText("<");
+        jButton30.addActionListener(new java.awt.event.ActionListener() {
+            public void actionPerformed(java.awt.event.ActionEvent evt) {
+                jButton30ActionPerformed(evt);
+            }
+        });
+
+        jButton31.setText(">");
+        jButton31.addActionListener(new java.awt.event.ActionListener() {
+            public void actionPerformed(java.awt.event.ActionEvent evt) {
+                jButton31ActionPerformed(evt);
+            }
+        });
+
+        jButton32.setText("Clear list");
+        jButton32.addActionListener(new java.awt.event.ActionListener() {
+            public void actionPerformed(java.awt.event.ActionEvent evt) {
+                jButton32ActionPerformed(evt);
+            }
+        });
+
+        jList6.setModel(colFunction.getModel());
+        jList6.setSelectionMode(javax.swing.ListSelectionModel.SINGLE_SELECTION);
+        jScrollPane8.setViewportView(jList6);
+
+        jLabel34.setText("Arity");
+
+        jLabel35.setBackground(new java.awt.Color(222, 222, 222));
+        jLabel35.setForeground(new java.awt.Color(255, 51, 102));
+
+        javax.swing.GroupLayout jPanel15Layout = new javax.swing.GroupLayout(jPanel15);
+        jPanel15.setLayout(jPanel15Layout);
+        jPanel15Layout.setHorizontalGroup(
+            jPanel15Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
+            .addGroup(jPanel15Layout.createSequentialGroup()
+                .addGroup(jPanel15Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
+                    .addGroup(jPanel15Layout.createSequentialGroup()
+                        .addGap(15, 15, 15)
+                        .addComponent(jTextField16, javax.swing.GroupLayout.PREFERRED_SIZE, 278, javax.swing.GroupLayout.PREFERRED_SIZE))
+                    .addGroup(jPanel15Layout.createSequentialGroup()
+                        .addGap(14, 14, 14)
+                        .addGroup(jPanel15Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING, false)
+                            .addComponent(jTextField17, javax.swing.GroupLayout.Alignment.TRAILING, javax.swing.GroupLayout.PREFERRED_SIZE, 278, javax.swing.GroupLayout.PREFERRED_SIZE)
+                            .addGroup(jPanel15Layout.createSequentialGroup()
+                                .addComponent(jButton27, javax.swing.GroupLayout.PREFERRED_SIZE, 89, javax.swing.GroupLayout.PREFERRED_SIZE)
+                                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
+                                .addComponent(jButton28, javax.swing.GroupLayout.PREFERRED_SIZE, 89, javax.swing.GroupLayout.PREFERRED_SIZE)
+                                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
+                                .addComponent(jButton29, javax.swing.GroupLayout.PREFERRED_SIZE, 89, javax.swing.GroupLayout.PREFERRED_SIZE))
+                            .addComponent(jLabel33, javax.swing.GroupLayout.PREFERRED_SIZE, 271, javax.swing.GroupLayout.PREFERRED_SIZE)
+                            .addComponent(jLabel34, javax.swing.GroupLayout.PREFERRED_SIZE, 271, javax.swing.GroupLayout.PREFERRED_SIZE)))
+                    .addGroup(jPanel15Layout.createSequentialGroup()
+                        .addGap(12, 12, 12)
+                        .addGroup(jPanel15Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
+                            .addComponent(jLabel35, javax.swing.GroupLayout.PREFERRED_SIZE, 281, javax.swing.GroupLayout.PREFERRED_SIZE)
+                            .addGroup(jPanel15Layout.createSequentialGroup()
+                                .addComponent(jButton30)
+                                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
+                                .addComponent(jButton31)
+                                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
+                                .addComponent(jButton32, javax.swing.GroupLayout.PREFERRED_SIZE, 200, javax.swing.GroupLayout.PREFERRED_SIZE)))))
+                .addGap(18, 18, 18)
+                .addComponent(jScrollPane8, javax.swing.GroupLayout.DEFAULT_SIZE, 486, Short.MAX_VALUE)
+                .addContainerGap())
+        );
+        jPanel15Layout.setVerticalGroup(
+            jPanel15Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
+            .addGroup(jPanel15Layout.createSequentialGroup()
+                .addGroup(jPanel15Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.TRAILING, false)
+                    .addGroup(jPanel15Layout.createSequentialGroup()
+                        .addContainerGap()
+                        .addComponent(jScrollPane8, javax.swing.GroupLayout.PREFERRED_SIZE, 492, javax.swing.GroupLayout.PREFERRED_SIZE))
+                    .addGroup(jPanel15Layout.createSequentialGroup()
+                        .addGap(15, 15, 15)
+                        .addComponent(jLabel33)
+                        .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
+                        .addComponent(jTextField17, javax.swing.GroupLayout.PREFERRED_SIZE, 30, javax.swing.GroupLayout.PREFERRED_SIZE)
+                        .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
+                        .addComponent(jLabel34)
+                        .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
+                        .addComponent(jTextField16, javax.swing.GroupLayout.PREFERRED_SIZE, 30, javax.swing.GroupLayout.PREFERRED_SIZE)
+                        .addGap(18, 18, 18)
+                        .addGroup(jPanel15Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
+                            .addComponent(jButton27)
+                            .addComponent(jButton28)
+                            .addComponent(jButton29))
+                        .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
+                        .addComponent(jLabel35, javax.swing.GroupLayout.PREFERRED_SIZE, 43, javax.swing.GroupLayout.PREFERRED_SIZE)
+                        .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
+                        .addGroup(jPanel15Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
+                            .addComponent(jButton30)
+                            .addComponent(jButton31)
+                            .addComponent(jButton32))))
+                .addContainerGap(14, Short.MAX_VALUE))
+        );
+
+        jTabbedPane1.addTab("Functions", jPanel15);
+
         jLabel18.setText("Name");
 
         jLabel19.setText("Type");
-
-        jLabel20.setText("Arity");
 
         jButton18.setText("Add");
         jButton18.addActionListener(new java.awt.event.ActionListener() {
@@ -494,6 +655,7 @@ public class Inicio extends javax.swing.JFrame {
         });
 
         jList4.setModel(colUniverse.getModel());
+        jList4.setSelectionMode(javax.swing.ListSelectionModel.SINGLE_SELECTION);
         jScrollPane5.setViewportView(jList4);
 
         jLabel21.setBackground(new java.awt.Color(222, 222, 222));
@@ -506,11 +668,11 @@ public class Inicio extends javax.swing.JFrame {
             }
         });
 
-        jLabel25.setText("Function name");
+        jLabel25.setText("Functions");
 
         jPanel7.setLayout(new java.awt.CardLayout());
 
-        jLabel22.setText("Value (Separated by ',')");
+        jLabel22.setText("Value (Separated by ';')");
 
         javax.swing.GroupLayout jPanel8Layout = new javax.swing.GroupLayout(jPanel8);
         jPanel8.setLayout(jPanel8Layout);
@@ -609,12 +771,14 @@ public class Inicio extends javax.swing.JFrame {
         jCheckBox8.setText("LE (<=)");
         jCheckBox8.setActionCommand("");
 
-        jButton24.setText("Edit");
+        jButton24.setText("Mode edit");
         jButton24.addActionListener(new java.awt.event.ActionListener() {
             public void actionPerformed(java.awt.event.ActionEvent evt) {
                 jButton24ActionPerformed(evt);
             }
         });
+
+        jComboBox8.setModel(CombolistModelFunctions);
 
         javax.swing.GroupLayout jPanel5Layout = new javax.swing.GroupLayout(jPanel5);
         jPanel5.setLayout(jPanel5Layout);
@@ -625,56 +789,56 @@ public class Inicio extends javax.swing.JFrame {
                 .addGroup(jPanel5Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
                     .addGroup(jPanel5Layout.createSequentialGroup()
                         .addGroup(jPanel5Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-                            .addComponent(jLabel20, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
                             .addComponent(jLabel26, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
-                            .addGroup(jPanel5Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING, false)
-                                .addGroup(jPanel5Layout.createSequentialGroup()
-                                    .addComponent(jButton20)
-                                    .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
-                                    .addComponent(jButton21)
-                                    .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.UNRELATED)
-                                    .addComponent(jButton22, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE))
-                                .addComponent(jLabel18)
-                                .addComponent(jLabel19)
-                                .addComponent(jLabel25)
-                                .addGroup(jPanel5Layout.createSequentialGroup()
-                                    .addGap(22, 22, 22)
-                                    .addGroup(jPanel5Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-                                        .addGroup(jPanel5Layout.createSequentialGroup()
-                                            .addComponent(jCheckBox6)
-                                            .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.UNRELATED)
-                                            .addComponent(jCheckBox7))
-                                        .addGroup(jPanel5Layout.createSequentialGroup()
-                                            .addComponent(jCheckBox3)
-                                            .addGap(24, 24, 24)
-                                            .addComponent(jCheckBox4)))
-                                    .addGap(18, 18, 18)
-                                    .addGroup(jPanel5Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-                                        .addComponent(jCheckBox5)
-                                        .addComponent(jCheckBox8)))
-                                .addComponent(jLabel21, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
-                                .addGroup(jPanel5Layout.createSequentialGroup()
-                                    .addComponent(jButton18, javax.swing.GroupLayout.PREFERRED_SIZE, 92, javax.swing.GroupLayout.PREFERRED_SIZE)
-                                    .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
-                                    .addComponent(jButton19, javax.swing.GroupLayout.PREFERRED_SIZE, 92, javax.swing.GroupLayout.PREFERRED_SIZE)
-                                    .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
-                                    .addComponent(jButton24, javax.swing.GroupLayout.PREFERRED_SIZE, 92, javax.swing.GroupLayout.PREFERRED_SIZE))))
-                        .addGap(14, 14, 14))
-                    .addComponent(jTextField10, javax.swing.GroupLayout.PREFERRED_SIZE, 290, javax.swing.GroupLayout.PREFERRED_SIZE)
-                    .addComponent(jTextField11, javax.swing.GroupLayout.PREFERRED_SIZE, 290, javax.swing.GroupLayout.PREFERRED_SIZE)
-                    .addComponent(jTextField9, javax.swing.GroupLayout.PREFERRED_SIZE, 288, javax.swing.GroupLayout.PREFERRED_SIZE)
-                    .addComponent(jSeparator3, javax.swing.GroupLayout.PREFERRED_SIZE, 290, javax.swing.GroupLayout.PREFERRED_SIZE)
-                    .addGroup(jPanel5Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.TRAILING, false)
-                        .addComponent(jPanel7, javax.swing.GroupLayout.Alignment.LEADING, javax.swing.GroupLayout.PREFERRED_SIZE, 0, Short.MAX_VALUE)
-                        .addComponent(jComboBox5, javax.swing.GroupLayout.Alignment.LEADING, 0, 288, Short.MAX_VALUE)))
-                .addComponent(jScrollPane5, javax.swing.GroupLayout.PREFERRED_SIZE, 480, javax.swing.GroupLayout.PREFERRED_SIZE)
-                .addGap(65, 65, 65))
+                            .addComponent(jLabel18)
+                            .addComponent(jLabel19)
+                            .addComponent(jLabel25)
+                            .addGroup(jPanel5Layout.createSequentialGroup()
+                                .addGap(22, 22, 22)
+                                .addGroup(jPanel5Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
+                                    .addGroup(jPanel5Layout.createSequentialGroup()
+                                        .addComponent(jCheckBox6)
+                                        .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.UNRELATED)
+                                        .addComponent(jCheckBox7))
+                                    .addGroup(jPanel5Layout.createSequentialGroup()
+                                        .addComponent(jCheckBox3)
+                                        .addGap(24, 24, 24)
+                                        .addComponent(jCheckBox4)))
+                                .addGap(18, 18, 18)
+                                .addGroup(jPanel5Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
+                                    .addComponent(jCheckBox5)
+                                    .addComponent(jCheckBox8)))
+                            .addGroup(jPanel5Layout.createSequentialGroup()
+                                .addComponent(jButton18, javax.swing.GroupLayout.PREFERRED_SIZE, 92, javax.swing.GroupLayout.PREFERRED_SIZE)
+                                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
+                                .addComponent(jButton19, javax.swing.GroupLayout.PREFERRED_SIZE, 92, javax.swing.GroupLayout.PREFERRED_SIZE)
+                                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
+                                .addComponent(jButton24, javax.swing.GroupLayout.PREFERRED_SIZE, 92, javax.swing.GroupLayout.PREFERRED_SIZE)))
+                        .addGap(26, 26, 26))
+                    .addGroup(jPanel5Layout.createSequentialGroup()
+                        .addGroup(jPanel5Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
+                            .addComponent(jTextField9, javax.swing.GroupLayout.PREFERRED_SIZE, 288, javax.swing.GroupLayout.PREFERRED_SIZE)
+                            .addComponent(jSeparator3, javax.swing.GroupLayout.PREFERRED_SIZE, 290, javax.swing.GroupLayout.PREFERRED_SIZE)
+                            .addGroup(jPanel5Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.TRAILING, false)
+                                .addComponent(jPanel7, javax.swing.GroupLayout.Alignment.LEADING, javax.swing.GroupLayout.PREFERRED_SIZE, 0, Short.MAX_VALUE)
+                                .addComponent(jComboBox5, javax.swing.GroupLayout.Alignment.LEADING, 0, 288, Short.MAX_VALUE))
+                            .addComponent(jComboBox8, javax.swing.GroupLayout.PREFERRED_SIZE, 288, javax.swing.GroupLayout.PREFERRED_SIZE)
+                            .addGroup(jPanel5Layout.createSequentialGroup()
+                                .addComponent(jButton20)
+                                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
+                                .addComponent(jButton21)
+                                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
+                                .addComponent(jButton22, javax.swing.GroupLayout.PREFERRED_SIZE, 216, javax.swing.GroupLayout.PREFERRED_SIZE))
+                            .addComponent(jLabel21, javax.swing.GroupLayout.PREFERRED_SIZE, 286, javax.swing.GroupLayout.PREFERRED_SIZE))
+                        .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)))
+                .addComponent(jScrollPane5, javax.swing.GroupLayout.PREFERRED_SIZE, 468, javax.swing.GroupLayout.PREFERRED_SIZE)
+                .addGap(77, 77, 77))
         );
         jPanel5Layout.setVerticalGroup(
             jPanel5Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
             .addGroup(jPanel5Layout.createSequentialGroup()
                 .addContainerGap()
-                .addGroup(jPanel5Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING, false)
+                .addGroup(jPanel5Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
                     .addComponent(jScrollPane5)
                     .addGroup(jPanel5Layout.createSequentialGroup()
                         .addComponent(jLabel18)
@@ -683,18 +847,14 @@ public class Inicio extends javax.swing.JFrame {
                         .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
                         .addComponent(jLabel19)
                         .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
-                        .addComponent(jComboBox5, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
+                        .addComponent(jComboBox5, javax.swing.GroupLayout.PREFERRED_SIZE, 30, javax.swing.GroupLayout.PREFERRED_SIZE)
                         .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.UNRELATED)
                         .addComponent(jPanel7, javax.swing.GroupLayout.PREFERRED_SIZE, 56, javax.swing.GroupLayout.PREFERRED_SIZE)
                         .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
                         .addComponent(jLabel25)
                         .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
-                        .addComponent(jTextField10, javax.swing.GroupLayout.PREFERRED_SIZE, 30, javax.swing.GroupLayout.PREFERRED_SIZE)
-                        .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
-                        .addComponent(jLabel20)
-                        .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
-                        .addComponent(jTextField11, javax.swing.GroupLayout.PREFERRED_SIZE, 30, javax.swing.GroupLayout.PREFERRED_SIZE)
-                        .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
+                        .addComponent(jComboBox8, javax.swing.GroupLayout.PREFERRED_SIZE, 30, javax.swing.GroupLayout.PREFERRED_SIZE)
+                        .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.UNRELATED)
                         .addComponent(jLabel26)
                         .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
                         .addGroup(jPanel5Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
@@ -713,14 +873,14 @@ public class Inicio extends javax.swing.JFrame {
                             .addComponent(jButton18)
                             .addComponent(jButton19)
                             .addComponent(jButton24))
-                        .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
+                        .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED, 58, Short.MAX_VALUE)
                         .addComponent(jLabel21, javax.swing.GroupLayout.PREFERRED_SIZE, 40, javax.swing.GroupLayout.PREFERRED_SIZE)
                         .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
                         .addGroup(jPanel5Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
                             .addComponent(jButton20)
                             .addComponent(jButton21)
                             .addComponent(jButton22))))
-                .addContainerGap(14, Short.MAX_VALUE))
+                .addContainerGap())
         );
 
         jTabbedPane1.addTab("Universes", jPanel5);
@@ -735,6 +895,7 @@ public class Inicio extends javax.swing.JFrame {
         jLabel1.setText("Name");
 
         jList1.setModel(colVariable.getModel());
+        jList1.setSelectionMode(javax.swing.ListSelectionModel.SINGLE_SELECTION);
         jScrollPane1.setViewportView(jList1);
 
         jLabel2.setText("Nickname");
@@ -778,7 +939,7 @@ public class Inicio extends javax.swing.JFrame {
 
         jComboBox7.setModel(CombolistModelUniverses);
 
-        jButton25.setText("Edit");
+        jButton25.setText("Mode edit");
         jButton25.addActionListener(new java.awt.event.ActionListener() {
             public void actionPerformed(java.awt.event.ActionEvent evt) {
                 jButton25ActionPerformed(evt);
@@ -871,8 +1032,6 @@ public class Inicio extends javax.swing.JFrame {
 
         jComboBox2.setModel(CombolistModelRelations1);
 
-        jLabel7.setText("Value");
-
         jSeparator1.setOrientation(javax.swing.SwingConstants.VERTICAL);
         jSeparator1.setBorder(javax.swing.BorderFactory.createLineBorder(new java.awt.Color(0, 0, 0)));
 
@@ -890,9 +1049,8 @@ public class Inicio extends javax.swing.JFrame {
 
         jLabel9.setText("Relation");
 
-        jLabel10.setText("Value");
-
         jList2.setModel(listModelImplicacionesList);
+        jList2.setSelectionMode(javax.swing.ListSelectionModel.SINGLE_SELECTION);
         jScrollPane2.setViewportView(jList2);
 
         jButton6.setText("Add");
@@ -994,6 +1152,22 @@ public class Inicio extends javax.swing.JFrame {
 
         jPanel11.add(jPanel14, "card-comboCol1");
 
+        javax.swing.GroupLayout jPanel21Layout = new javax.swing.GroupLayout(jPanel21);
+        jPanel21.setLayout(jPanel21Layout);
+        jPanel21Layout.setHorizontalGroup(
+            jPanel21Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
+            .addComponent(jComboBox15, 0, 130, Short.MAX_VALUE)
+        );
+        jPanel21Layout.setVerticalGroup(
+            jPanel21Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
+            .addGroup(jPanel21Layout.createSequentialGroup()
+                .addContainerGap()
+                .addComponent(jComboBox15, javax.swing.GroupLayout.DEFAULT_SIZE, 29, Short.MAX_VALUE)
+                .addContainerGap())
+        );
+
+        jPanel11.add(jPanel21, "card-comboFunc1");
+
         jPanel18.setLayout(new java.awt.CardLayout());
 
         jComboBox12.setModel(CombolistModelValues2);
@@ -1002,13 +1176,13 @@ public class Inicio extends javax.swing.JFrame {
         jPanel16.setLayout(jPanel16Layout);
         jPanel16Layout.setHorizontalGroup(
             jPanel16Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-            .addComponent(jComboBox12, 0, 130, Short.MAX_VALUE)
+            .addComponent(jComboBox12, javax.swing.GroupLayout.PREFERRED_SIZE, 130, javax.swing.GroupLayout.PREFERRED_SIZE)
         );
         jPanel16Layout.setVerticalGroup(
             jPanel16Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
             .addGroup(jPanel16Layout.createSequentialGroup()
                 .addContainerGap()
-                .addComponent(jComboBox12, javax.swing.GroupLayout.DEFAULT_SIZE, 30, Short.MAX_VALUE))
+                .addComponent(jComboBox12, javax.swing.GroupLayout.PREFERRED_SIZE, 30, javax.swing.GroupLayout.PREFERRED_SIZE))
         );
 
         jPanel18.add(jPanel16, "card-combo2");
@@ -1045,14 +1219,64 @@ public class Inicio extends javax.swing.JFrame {
 
         jPanel18.add(jPanel19, "card-comboCol2");
 
+        javax.swing.GroupLayout jPanel20Layout = new javax.swing.GroupLayout(jPanel20);
+        jPanel20.setLayout(jPanel20Layout);
+        jPanel20Layout.setHorizontalGroup(
+            jPanel20Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
+            .addComponent(jComboBox14, 0, 130, Short.MAX_VALUE)
+        );
+        jPanel20Layout.setVerticalGroup(
+            jPanel20Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
+            .addGroup(jPanel20Layout.createSequentialGroup()
+                .addContainerGap()
+                .addComponent(jComboBox14, javax.swing.GroupLayout.PREFERRED_SIZE, 30, javax.swing.GroupLayout.PREFERRED_SIZE)
+                .addContainerGap(javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE))
+        );
+
+        jPanel18.add(jPanel20, "card-comboFunc2");
+
         jLabel31.setText("Variable name");
 
         jLabel32.setText("Variable name");
 
-        jButton26.setText("Edit");
+        jButton26.setText("Mode edit");
         jButton26.addActionListener(new java.awt.event.ActionListener() {
             public void actionPerformed(java.awt.event.ActionEvent evt) {
                 jButton26ActionPerformed(evt);
+            }
+        });
+
+        buttonGroup3.add(jRadioButton10);
+        jRadioButton10.setSelected(true);
+        jRadioButton10.setText("Value");
+        jRadioButton10.addActionListener(new java.awt.event.ActionListener() {
+            public void actionPerformed(java.awt.event.ActionEvent evt) {
+                jRadioButton10ActionPerformed(evt);
+            }
+        });
+
+        buttonGroup3.add(jRadioButton11);
+        jRadioButton11.setText("Function");
+        jRadioButton11.addActionListener(new java.awt.event.ActionListener() {
+            public void actionPerformed(java.awt.event.ActionEvent evt) {
+                jRadioButton11ActionPerformed(evt);
+            }
+        });
+
+        buttonGroup4.add(jRadioButton12);
+        jRadioButton12.setSelected(true);
+        jRadioButton12.setText("Value");
+        jRadioButton12.addActionListener(new java.awt.event.ActionListener() {
+            public void actionPerformed(java.awt.event.ActionEvent evt) {
+                jRadioButton12ActionPerformed(evt);
+            }
+        });
+
+        buttonGroup4.add(jRadioButton13);
+        jRadioButton13.setText("Function");
+        jRadioButton13.addActionListener(new java.awt.event.ActionListener() {
+            public void actionPerformed(java.awt.event.ActionEvent evt) {
+                jRadioButton13ActionPerformed(evt);
             }
         });
 
@@ -1071,35 +1295,38 @@ public class Inicio extends javax.swing.JFrame {
                         .addComponent(jButton10, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE))
                     .addComponent(jLabel11, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
                     .addGroup(jPanel2Layout.createSequentialGroup()
-                        .addGroup(jPanel2Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-                            .addGroup(jPanel2Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING, false)
-                                .addComponent(jLabel31)
-                                .addComponent(jLabel6)
-                                .addComponent(jLabel7)
-                                .addComponent(jComboBox2, 0, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
-                                .addComponent(jComboBox1, 0, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
-                                .addComponent(jCheckBox1)
-                                .addComponent(jPanel11, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE))
-                            .addComponent(jLabel5))
-                        .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.UNRELATED)
-                        .addComponent(jSeparator1, javax.swing.GroupLayout.PREFERRED_SIZE, 3, javax.swing.GroupLayout.PREFERRED_SIZE)
-                        .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.UNRELATED)
-                        .addGroup(jPanel2Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING, false)
-                            .addComponent(jLabel9)
-                            .addComponent(jLabel10)
-                            .addComponent(jCheckBox2)
-                            .addComponent(jComboBox4, 0, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
-                            .addComponent(jComboBox3, 0, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
-                            .addComponent(jPanel18, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
-                            .addComponent(jLabel32)
-                            .addComponent(jLabel8)))
-                    .addGroup(jPanel2Layout.createSequentialGroup()
                         .addComponent(jButton6, javax.swing.GroupLayout.PREFERRED_SIZE, 92, javax.swing.GroupLayout.PREFERRED_SIZE)
                         .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
                         .addComponent(jButton7, javax.swing.GroupLayout.PREFERRED_SIZE, 92, javax.swing.GroupLayout.PREFERRED_SIZE)
                         .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
                         .addComponent(jButton26, javax.swing.GroupLayout.PREFERRED_SIZE, 92, javax.swing.GroupLayout.PREFERRED_SIZE))
-                    .addComponent(jSeparator2))
+                    .addComponent(jSeparator2)
+                    .addGroup(jPanel2Layout.createSequentialGroup()
+                        .addGroup(jPanel2Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
+                            .addGroup(jPanel2Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING, false)
+                                .addComponent(jLabel31)
+                                .addComponent(jLabel6)
+                                .addComponent(jComboBox2, 0, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
+                                .addComponent(jComboBox1, 0, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
+                                .addComponent(jPanel11, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE))
+                            .addComponent(jLabel5)
+                            .addComponent(jCheckBox1)
+                            .addComponent(jRadioButton10)
+                            .addComponent(jRadioButton11))
+                        .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.UNRELATED)
+                        .addComponent(jSeparator1, javax.swing.GroupLayout.PREFERRED_SIZE, 3, javax.swing.GroupLayout.PREFERRED_SIZE)
+                        .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.UNRELATED)
+                        .addGroup(jPanel2Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
+                            .addComponent(jCheckBox2)
+                            .addGroup(jPanel2Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING, false)
+                                .addComponent(jLabel9)
+                                .addComponent(jComboBox4, 0, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
+                                .addComponent(jComboBox3, 0, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
+                                .addComponent(jPanel18, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
+                                .addComponent(jLabel32)
+                                .addComponent(jLabel8))
+                            .addComponent(jRadioButton12)
+                            .addComponent(jRadioButton13))))
                 .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.UNRELATED, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
                 .addGroup(jPanel2Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING, false)
                     .addComponent(jScrollPane2, javax.swing.GroupLayout.DEFAULT_SIZE, 485, Short.MAX_VALUE)
@@ -1116,45 +1343,52 @@ public class Inicio extends javax.swing.JFrame {
                         .addGap(18, 18, 18)
                         .addComponent(jScrollPane7, javax.swing.GroupLayout.PREFERRED_SIZE, 237, javax.swing.GroupLayout.PREFERRED_SIZE))
                     .addGroup(jPanel2Layout.createSequentialGroup()
-                        .addGap(13, 13, 13)
-                        .addGroup(jPanel2Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.TRAILING)
+                        .addGroup(jPanel2Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING, false)
                             .addGroup(jPanel2Layout.createSequentialGroup()
-                                .addComponent(jLabel5)
-                                .addGap(18, 18, 18)
-                                .addComponent(jLabel31)
+                                .addGap(13, 13, 13)
+                                .addGroup(jPanel2Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.TRAILING, false)
+                                    .addGroup(jPanel2Layout.createSequentialGroup()
+                                        .addComponent(jLabel8)
+                                        .addGap(18, 18, 18)
+                                        .addComponent(jLabel32)
+                                        .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.UNRELATED)
+                                        .addComponent(jComboBox3, javax.swing.GroupLayout.PREFERRED_SIZE, 30, javax.swing.GroupLayout.PREFERRED_SIZE)
+                                        .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
+                                        .addComponent(jLabel9)
+                                        .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.UNRELATED)
+                                        .addComponent(jComboBox4, javax.swing.GroupLayout.PREFERRED_SIZE, 30, javax.swing.GroupLayout.PREFERRED_SIZE)
+                                        .addGap(12, 12, 12)
+                                        .addComponent(jRadioButton12)
+                                        .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
+                                        .addComponent(jRadioButton13)
+                                        .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
+                                        .addComponent(jPanel18, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE))
+                                    .addGroup(jPanel2Layout.createSequentialGroup()
+                                        .addComponent(jLabel5)
+                                        .addGap(18, 18, 18)
+                                        .addComponent(jLabel31)
+                                        .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.UNRELATED)
+                                        .addComponent(jComboBox1, javax.swing.GroupLayout.PREFERRED_SIZE, 30, javax.swing.GroupLayout.PREFERRED_SIZE)
+                                        .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
+                                        .addComponent(jLabel6)
+                                        .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.UNRELATED)
+                                        .addComponent(jComboBox2, javax.swing.GroupLayout.PREFERRED_SIZE, 30, javax.swing.GroupLayout.PREFERRED_SIZE)
+                                        .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.UNRELATED)
+                                        .addComponent(jRadioButton10)
+                                        .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
+                                        .addComponent(jRadioButton11)
+                                        .addGap(14, 14, 14)
+                                        .addComponent(jPanel11, javax.swing.GroupLayout.PREFERRED_SIZE, 41, javax.swing.GroupLayout.PREFERRED_SIZE)))
                                 .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.UNRELATED)
-                                .addComponent(jComboBox1, javax.swing.GroupLayout.PREFERRED_SIZE, 30, javax.swing.GroupLayout.PREFERRED_SIZE)
-                                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
-                                .addComponent(jLabel6)
-                                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.UNRELATED)
-                                .addComponent(jComboBox2, javax.swing.GroupLayout.PREFERRED_SIZE, 30, javax.swing.GroupLayout.PREFERRED_SIZE)
-                                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
-                                .addComponent(jLabel7)
-                                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
-                                .addComponent(jPanel11, javax.swing.GroupLayout.PREFERRED_SIZE, 41, javax.swing.GroupLayout.PREFERRED_SIZE)
-                                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
-                                .addComponent(jCheckBox1))
-                            .addGroup(jPanel2Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING, false)
-                                .addGroup(jPanel2Layout.createSequentialGroup()
-                                    .addComponent(jLabel8)
-                                    .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
-                                    .addComponent(jLabel32)
-                                    .addGap(12, 12, 12)
-                                    .addComponent(jComboBox3, javax.swing.GroupLayout.PREFERRED_SIZE, 30, javax.swing.GroupLayout.PREFERRED_SIZE)
-                                    .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
-                                    .addComponent(jLabel9)
-                                    .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.UNRELATED)
-                                    .addComponent(jComboBox4, javax.swing.GroupLayout.PREFERRED_SIZE, 30, javax.swing.GroupLayout.PREFERRED_SIZE)
-                                    .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
-                                    .addComponent(jLabel10)
-                                    .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
-                                    .addComponent(jPanel18, javax.swing.GroupLayout.PREFERRED_SIZE, 36, javax.swing.GroupLayout.PREFERRED_SIZE)
-                                    .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.UNRELATED)
-                                    .addComponent(jCheckBox2))
-                                .addComponent(jSeparator1, javax.swing.GroupLayout.Alignment.TRAILING, javax.swing.GroupLayout.PREFERRED_SIZE, 254, javax.swing.GroupLayout.PREFERRED_SIZE)))
-                        .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.UNRELATED)
+                                .addGroup(jPanel2Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
+                                    .addComponent(jCheckBox1, javax.swing.GroupLayout.Alignment.TRAILING)
+                                    .addComponent(jCheckBox2, javax.swing.GroupLayout.Alignment.TRAILING)))
+                            .addGroup(jPanel2Layout.createSequentialGroup()
+                                .addGap(20, 20, 20)
+                                .addComponent(jSeparator1, javax.swing.GroupLayout.PREFERRED_SIZE, 300, javax.swing.GroupLayout.PREFERRED_SIZE)))
+                        .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
                         .addComponent(jSeparator2, javax.swing.GroupLayout.PREFERRED_SIZE, 3, javax.swing.GroupLayout.PREFERRED_SIZE)
-                        .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED, 93, Short.MAX_VALUE)
+                        .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED, 50, Short.MAX_VALUE)
                         .addGroup(jPanel2Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
                             .addComponent(jButton6)
                             .addComponent(jButton7)
@@ -1166,7 +1400,7 @@ public class Inicio extends javax.swing.JFrame {
                             .addComponent(jButton8)
                             .addComponent(jButton9)
                             .addComponent(jButton10))))
-                .addContainerGap(17, Short.MAX_VALUE))
+                .addContainerGap(14, Short.MAX_VALUE))
         );
 
         jTabbedPane1.addTab("Implications", jPanel2);
@@ -1290,7 +1524,7 @@ public class Inicio extends javax.swing.JFrame {
                 .addGap(0, 20, Short.MAX_VALUE))
         );
 
-        jButton12.getAccessibleContext().setAccessibleName("Update ");
+        jButton12.getAccessibleContext().setAccessibleName("Update");
 
         jTabbedPane1.addTab("Generation", jPanel3);
         jPanel3.getAccessibleContext().setAccessibleName("");
@@ -1351,9 +1585,7 @@ public class Inicio extends javax.swing.JFrame {
         getContentPane().setLayout(layout);
         layout.setHorizontalGroup(
             layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-            .addGroup(javax.swing.GroupLayout.Alignment.TRAILING, layout.createSequentialGroup()
-                .addComponent(jTabbedPane1, javax.swing.GroupLayout.PREFERRED_SIZE, 803, javax.swing.GroupLayout.PREFERRED_SIZE)
-                .addGap(0, 0, Short.MAX_VALUE))
+            .addComponent(jTabbedPane1, javax.swing.GroupLayout.Alignment.TRAILING, javax.swing.GroupLayout.PREFERRED_SIZE, 803, javax.swing.GroupLayout.PREFERRED_SIZE)
         );
         layout.setVerticalGroup(
             layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
@@ -1421,19 +1653,112 @@ public class Inicio extends javax.swing.JFrame {
     private void initComboBoxCheckItem() {
         jComboBox11.setRenderer(new CheckComboRenderer());
         jComboBox13.setRenderer(new CheckComboRenderer());
+        jComboBox8.setRenderer(new CheckComboRenderer());
 
-        // Editor para cambiar el estado al hacer clic
-        jComboBox11.addActionListener(e -> {
-            CheckComboItem item = (CheckComboItem) jComboBox11.getSelectedItem();
-            assert item != null;
-            item.setSelected(!item.isSelected());
-        });
-        // Editor para cambiar el estado al hacer clic
-        jComboBox13.addActionListener(e -> {
-            CheckComboItem item = (CheckComboItem) jComboBox13.getSelectedItem();
-            assert item != null;
-            item.setSelected(!item.isSelected());
-        });
+        final AtomicReference<CheckComboItem> lastChecked11 = new AtomicReference<>(null);
+        final AtomicReference<CheckComboItem> lastChecked13 = new AtomicReference<>(null);
+        final AtomicReference<CheckComboItem> lastChecked8 = new AtomicReference<>(null);
+
+        jComboBox11.setSelectedIndex(-1);
+        jComboBox13.setSelectedIndex(-1);
+        jComboBox8.setSelectedIndex(-1);
+
+        java.util.function.BiConsumer<JComboBox<CheckComboItem>, AtomicReference<CheckComboItem>> install
+                = (combo, lastChecked) -> {
+                    combo.putClientProperty("checkComboML", null);
+                    combo.addPopupMenuListener(new PopupMenuListener() {
+                        @Override
+                        public void popupMenuWillBecomeVisible(PopupMenuEvent e) {
+                            try {
+                                ComboPopup popup = (ComboPopup) combo.getUI().getAccessibleChild(combo, 0);
+                                @SuppressWarnings("unchecked")
+                                JList<CheckComboItem> list = (JList) popup.getList();
+
+                                if (combo.getClientProperty("checkComboML") != null) {
+                                    return;
+                                }
+
+                                MouseListener ml = new MouseAdapter() {
+                                    @Override
+                                    public void mousePressed(MouseEvent me) {
+                                        int index = list.locationToIndex(me.getPoint());
+                                        if (index < 0) {
+                                            return;
+                                        }
+                                        java.awt.Rectangle cellBounds = list.getCellBounds(index, index);
+                                        if (cellBounds == null || !cellBounds.contains(me.getPoint())) {
+                                            return;
+                                        }
+
+                                        CheckComboItem item = list.getModel().getElementAt(index);
+                                        if (item == null) {
+                                            return;
+                                        }
+
+                                        boolean newState = !item.isSelected();
+                                        item.setSelected(newState);
+
+                                        if (newState) {
+                                            // marcar como último marcado y mostrarlo
+                                            lastChecked.set(item);
+                                        } else {
+                                            // si se desmarca el último marcado, intentar encontrar otro marcado
+                                            if (Objects.equals(lastChecked.get(), item)) {
+                                                CheckComboItem found = null;
+                                                for (int i = 0; i < list.getModel().getSize(); i++) {
+                                                    CheckComboItem ci = list.getModel().getElementAt(i);
+                                                    if (ci != null && ci.isSelected()) {
+                                                        found = ci;
+                                                        break;
+                                                    }
+                                                }
+                                                lastChecked.set(found);
+                                            }
+                                        }
+
+                                        // Restaurar la selección visible al último marcado o dejar sin selección
+                                        final CheckComboItem visible = lastChecked.get();
+                                        SwingUtilities.invokeLater(() -> {
+                                            if (visible != null) {
+                                                combo.setSelectedItem(visible);
+                                            } else {
+                                                combo.setSelectedIndex(-1);
+                                            }
+                                            list.repaint();
+                                            combo.setPopupVisible(true); // mantener abierto para marcar varios
+                                        });
+                                    }
+                                };
+
+                                list.addMouseListener(ml);
+                                combo.putClientProperty("checkComboML", ml);
+                            } catch (Exception ex) {
+                                ex.printStackTrace();
+                            }
+                        }
+
+                        @Override
+                        public void popupMenuWillBecomeInvisible(PopupMenuEvent e) {
+                            try {
+                                MouseListener ml = (MouseListener) combo.getClientProperty("checkComboML");
+                                if (ml != null) {
+                                    ComboPopup popup = (ComboPopup) combo.getUI().getAccessibleChild(combo, 0);
+                                    popup.getList().removeMouseListener(ml);
+                                    combo.putClientProperty("checkComboML", null);
+                                }
+                            } catch (Exception ignored) {
+                            }
+                        }
+
+                        @Override
+                        public void popupMenuCanceled(PopupMenuEvent e) {
+                        }
+                    });
+                };
+
+        install.accept(jComboBox11, lastChecked11);
+        install.accept(jComboBox13, lastChecked13);
+        install.accept(jComboBox8, lastChecked8);
     }
 
     /**
@@ -1449,10 +1774,99 @@ public class Inicio extends javax.swing.JFrame {
         for (int i = 0; i < combo.getItemCount(); i++) {
             CheckComboItem item = combo.getItemAt(i);
             if (item.isSelected()) {
-                selected.add(item.toString());
+                selected.add(item.toString().trim());
             }
         }
         return selected;
+    }
+
+    /**
+     * Devuelve una lista de objetos Function correspondientes a los elementos
+     * seleccionados en un JComboBox de CheckComboItem.
+     *
+     * @param combo combo que contiene {@link CheckComboItem} con texto de función
+     * @return ArrayList de {@link Function} construido a partir de los items seleccionados
+     */
+    public ArrayList<Function> getSelectedFunctions(JComboBox<CheckComboItem> combo) {
+        ArrayList<Function> selected = new ArrayList<>();
+
+        for (int i = 0; i < combo.getItemCount(); i++) {
+            CheckComboItem item = combo.getItemAt(i);
+            if (item.isSelected()) {
+                selected.add(new Function(item.toString()));
+            }
+        }
+        return selected;
+    }
+
+    /**
+     * Marca como seleccionados en el combo los elementos que coincidan con la
+     * lista de funciones provista. Los items que no coincidan se desmarcan.
+     *
+     * @param combo combo que contiene {@link CheckComboItem}
+     * @param functionsToSelect lista de {@link Function} que deben quedar seleccionadas
+     */
+    public void setSelectedFunctions(
+            JComboBox<CheckComboItem> combo,
+            ArrayList<Function> functionsToSelect) {
+
+        for (int i = 0; i < combo.getItemCount(); i++) {
+            CheckComboItem item = combo.getItemAt(i);
+            boolean sel = false;
+            for (Function f : functionsToSelect) {
+                if (item.toString().equals(f.toString())) {
+                    item.setSelected(true);
+                    sel = true;
+                    break;
+                }
+            }
+            if (!sel) {
+                item.setSelected(false);
+            }
+        }
+
+        combo.repaint();
+    }
+
+    /**
+     * Deselecciona todos los elementos del combo de funciones (CheckComboItem).
+     *
+     * @param combo combo que contiene {@link CheckComboItem}
+     */
+    public void unSelectedFunctions(JComboBox<CheckComboItem> combo) {
+        for (int i = 0; i < combo.getItemCount(); i++) {
+            CheckComboItem item = combo.getItemAt(i);
+            item.setSelected(false);
+        }
+    }
+
+    /**
+     * Marca en el combo los items cuyo texto coincide con alguno de los valores
+     * del array proporcionado. Los demás items se desmarcan.
+     *
+     * @param combo combo que contiene {@link CheckComboItem}
+     * @param selectedItems array de textos que deben quedar seleccionados
+     */
+    public void setSelectedItems(
+            JComboBox<CheckComboItem> combo,
+            String[] selectedItems) {
+
+        for (int i = 0; i < combo.getItemCount(); i++) {
+            CheckComboItem item = combo.getItemAt(i);
+            boolean sel = false;
+            for (String f : selectedItems) {
+                if (item.toString().trim().equals(f.trim())) {
+                    item.setSelected(true);
+                    sel = true;
+                    break;
+                }
+            }
+            if (!sel) {
+                item.setSelected(false);
+            }
+        }
+
+        combo.repaint();
     }
 
     /**
@@ -1487,7 +1901,7 @@ public class Inicio extends javax.swing.JFrame {
         if (jTextField1.getText().isEmpty()) {
             jTextField1.grabFocus();
             jLabel3.setText("<html>You cannot leave the name blank.</html>");
-        } else if (colVariable.containsName(jTextField1.getText())) {
+        } else if ("Add".equals(jButton1.getText()) && colVariable.containsName(jTextField1.getText())) {
             jTextField1.grabFocus();
             jLabel3.setText("<html>You cannot add duplicate variables.<br/>The name must be unique.</html>");
         } else if (jTextField2.getText().isEmpty()) {
@@ -1504,7 +1918,7 @@ public class Inicio extends javax.swing.JFrame {
                 colVariable.set(selectedIndexVariable, variable);
                 jLabel3.setText("<html>The variable has been edited successfully.</html>");
                 jButton1.setText("Add");
-                jButton25.setText("Edit");
+                jButton25.setText("Mode edit");
             }
         }
         utils.emptyMatriz();
@@ -1561,7 +1975,7 @@ public class Inicio extends javax.swing.JFrame {
                 jList1.setSelectedIndex(selectedIndex - 1);
                 jLabel3.setText("<html>Item moved.</html>");
             } else {
-                jLabel3.setText("<html>The selected item cannot be moved further up.</html>");
+                jLabel3.setText("<html>The selected item cannot be moved up further.</html>");
             }
         } else {
             jLabel3.setText("<html>Select an item to move up.</html>");
@@ -1586,7 +2000,7 @@ public class Inicio extends javax.swing.JFrame {
                 jList1.setSelectedIndex(selectedIndex + 1);
                 jLabel3.setText("<html>Item moved.</html>");
             } else {
-                jLabel3.setText("<html>The selected item cannot be moved further down.</html>");
+                jLabel3.setText("<html>The selected item cannot be moved down further.</html>");
             }
         } else {
             jLabel3.setText("<html>Select an item to move down.</html>");
@@ -1844,38 +2258,51 @@ public class Inicio extends javax.swing.JFrame {
         } else {
 
             String value1 = "";
-            switch (variable1.getUniverse().getType()) {
-                case "Enum (Scalar)", "Bool" ->
-                    value1 = String.valueOf(jComboBox10.getSelectedItem());
-                case "Enum (Collection)" ->
-                    value1 = String.valueOf(getSelectedItems(jComboBox11));
-                case "Real" ->
-                    value1 = jTextField4.getText();
+            if (jRadioButton10.isSelected()) {
+                switch (variable1.getUniverse().getType()) {
+                    case "Enum (Scalar)", "Bool" ->
+                        value1 = String.valueOf(jComboBox10.getSelectedItem());
+                    case "Enum (Collection)" ->
+                        value1 = String.valueOf(getSelectedItems(jComboBox11));
+                    case "Real" ->
+                        value1 = jTextField4.getText();
+                }
+            } else {
+                value1 = String.valueOf(jComboBox15.getSelectedItem());
             }
 
             String value2 = "";
-            switch (variable2.getUniverse().getType()) {
-                case "Enum (Scalar)", "Bool" ->
-                    value2 = String.valueOf(jComboBox12.getSelectedItem());
-                case "Enum (Collection)" ->
-                    value2 = String.valueOf(getSelectedItems(jComboBox13));
-                case "Real" ->
-                    value2 = jTextField15.getText();
+            if (jRadioButton12.isSelected()) {
+                switch (variable2.getUniverse().getType()) {
+                    case "Enum (Scalar)", "Bool" ->
+                        value2 = String.valueOf(jComboBox12.getSelectedItem());
+                    case "Enum (Collection)" ->
+                        value2 = String.valueOf(getSelectedItems(jComboBox13));
+                    case "Real" ->
+                        value2 = jTextField15.getText();
+                }
+            } else {
+                value2 = String.valueOf(jComboBox14.getSelectedItem());
             }
-
-            Implication implication = new Implication(colVariable.find(String.valueOf(jComboBox1.getSelectedItem()), Variable::getNickname), String.valueOf(jComboBox2.getSelectedItem()), value1, jCheckBox1.isSelected(),
-                    colVariable.find(String.valueOf(jComboBox3.getSelectedItem()), Variable::getNickname), String.valueOf(jComboBox4.getSelectedItem()), value2, jCheckBox1.isSelected());
+            boolean valueFunction1 = jRadioButton10.isSelected();
+            boolean valueFunction2 = jRadioButton12.isSelected();
+            Implication implication = new Implication(colVariable.find(String.valueOf(jComboBox1.getSelectedItem()), Variable::getNickname), String.valueOf(jComboBox2.getSelectedItem()), value1, jCheckBox1.isSelected(), valueFunction1,
+                    colVariable.find(String.valueOf(jComboBox3.getSelectedItem()), Variable::getNickname), String.valueOf(jComboBox4.getSelectedItem()), value2, jCheckBox2.isSelected(), valueFunction2);
 
             if ("Add".equals(jButton6.getText())) {
-                colImplication.add(implication);
+                if (listModelImplicacionesList.contains(implication.toString())) {
+                    jLabel11.setText("<html>You cannot add duplicate implications.</html>");
+                } else {
+                    colImplication.add(implication);
 
-                listModelLiterales1.addElement(implication.getLiteral1());
-                listModelLiterales2.addElement(implication.getLiteral2());
-                listModelImplicacionesNot1.addElement(String.valueOf(implication.isNegated1()));
-                listModelImplicacionesNot2.addElement(String.valueOf(implication.isNegated2()));
-                listModelImplicacionesList.addElement(implication.toString());
-                listModelImplicacionesListCR.addElement(implication.toStringCR());
-                jLabel11.setText("<html>The implication has been added successfully.</html>");
+                    listModelLiterales1.addElement(implication.getLiteral1());
+                    listModelLiterales2.addElement(implication.getLiteral2());
+                    listModelImplicacionesNot1.addElement(String.valueOf(implication.isNegated1()));
+                    listModelImplicacionesNot2.addElement(String.valueOf(implication.isNegated2()));
+                    listModelImplicacionesList.addElement(implication.toString());
+                    listModelImplicacionesListCR.addElement(implication.toStringCR());
+                    jLabel11.setText("<html>The implication has been added successfully.</html>");
+                }
             } else {
                 colImplication.set(selectedIndexImplication, implication);
 
@@ -1887,7 +2314,7 @@ public class Inicio extends javax.swing.JFrame {
                 listModelImplicacionesListCR.setElementAt(implication.toStringCR(), selectedIndexImplication);
                 jLabel11.setText("<html>The implication has been edit successfully.</html>");
                 jButton6.setText("Add");
-                jButton26.setText("Edit");
+                jButton26.setText("Mode edit");
 
             }
             utils.emptyMatriz();
@@ -1920,7 +2347,7 @@ public class Inicio extends javax.swing.JFrame {
                 fileToSave = new File(fileToSave.getAbsolutePath() + ".sgb"); // Add default extension
             }
             // Content to save
-            String content = utils.generarJSON(colConstruct, colUniverse, colVariable, colImplication);
+            String content = utils.generarJSON(colConstruct, colUniverse, colVariable, colImplication, colFunction);
 
             // Guardar el contenido en el archivo
             try (BufferedWriter writer = new BufferedWriter(new FileWriter(fileToSave))) {
@@ -1958,6 +2385,7 @@ public class Inicio extends javax.swing.JFrame {
             } else {
                 try {
                     cargarStringJSON(fileToLoad);
+                    jTabbedPane1.setSelectedIndex(0);
                     JOptionPane.showMessageDialog(this, "File loaded successfully.");
                 } catch (IOException ex) {
                     JOptionPane.showMessageDialog(this, "Error loading file: " + ex.getMessage());
@@ -1986,18 +2414,34 @@ public class Inicio extends javax.swing.JFrame {
             colConstruct.add(construct);
         }
 
+        /* //////////////////////// Functions //////////////////////////// */
+        JSONArray jFunctions = json.getJSONArray("Functions");
+
+        colFunction.empty();
+        for (int i = 0; i < jFunctions.length(); i++) {
+            Function function = new Function(jFunctions.getJSONObject(i).getString("Name"), jFunctions.getJSONObject(i).getInt("Aridad"));
+            colFunction.add(function);
+        }
+
         /* //////////////////////// Universes //////////////////////////// */
         JSONArray jUniverses = json.getJSONArray("Universes");
 
         colUniverse.empty();
         for (int i = 0; i < jUniverses.length(); i++) {
+
+            JSONArray jUniFunction = jUniverses.getJSONObject(i).getJSONArray("Functions");
+            ArrayList<Function> ALFunctions = new ArrayList<>();
+            for (int j = 0; j < jUniFunction.length(); j++) {
+                ALFunctions.add(new Function(jUniFunction.getJSONObject(j).getString("Name"), jUniFunction.getJSONObject(j).getInt("Aridad")));
+            }
+
             Universe universe = switch (jUniverses.getJSONObject(i).getString("Type")) {
                 case "Enum (Scalar)", "Enum (Collection)" ->
-                    new Universe(jUniverses.getJSONObject(i).getString("Name"), jUniverses.getJSONObject(i).getString("Type"), jUniverses.getJSONObject(i).getString("ValueEnum"), jUniverses.getJSONObject(i).getString("Function"), jUniverses.getJSONObject(i).getInt("Aridad"), jUniverses.getJSONObject(i).getBoolean("Equal"), jUniverses.getJSONObject(i).getBoolean("Greater"), jUniverses.getJSONObject(i).getBoolean("Greater_equal"), jUniverses.getJSONObject(i).getBoolean("Not_equal"), jUniverses.getJSONObject(i).getBoolean("Less"), jUniverses.getJSONObject(i).getBoolean("Less_equal"));
+                    new Universe(jUniverses.getJSONObject(i).getString("Name"), jUniverses.getJSONObject(i).getString("Type"), jUniverses.getJSONObject(i).getString("ValueEnum"), ALFunctions, jUniverses.getJSONObject(i).getBoolean("Equal"), jUniverses.getJSONObject(i).getBoolean("Greater"), jUniverses.getJSONObject(i).getBoolean("Greater_equal"), jUniverses.getJSONObject(i).getBoolean("Not_equal"), jUniverses.getJSONObject(i).getBoolean("Less"), jUniverses.getJSONObject(i).getBoolean("Less_equal"));
                 case "Real" ->
-                    new Universe(jUniverses.getJSONObject(i).getString("Name"), jUniverses.getJSONObject(i).getString("Type"), jUniverses.getJSONObject(i).getDouble("ValueMin"), jUniverses.getJSONObject(i).getDouble("ValueMax"), jUniverses.getJSONObject(i).getString("Function"), jUniverses.getJSONObject(i).getInt("Aridad"), jUniverses.getJSONObject(i).getBoolean("Equal"), jUniverses.getJSONObject(i).getBoolean("Greater"), jUniverses.getJSONObject(i).getBoolean("Greater_equal"), jUniverses.getJSONObject(i).getBoolean("Not_equal"), jUniverses.getJSONObject(i).getBoolean("Less"), jUniverses.getJSONObject(i).getBoolean("Less_equal"));
+                    new Universe(jUniverses.getJSONObject(i).getString("Name"), jUniverses.getJSONObject(i).getString("Type"), jUniverses.getJSONObject(i).getDouble("ValueMin"), jUniverses.getJSONObject(i).getDouble("ValueMax"), ALFunctions, jUniverses.getJSONObject(i).getBoolean("Equal"), jUniverses.getJSONObject(i).getBoolean("Greater"), jUniverses.getJSONObject(i).getBoolean("Greater_equal"), jUniverses.getJSONObject(i).getBoolean("Not_equal"), jUniverses.getJSONObject(i).getBoolean("Less"), jUniverses.getJSONObject(i).getBoolean("Less_equal"));
                 case "Bool" ->
-                    new Universe(jUniverses.getJSONObject(i).getString("Name"), jUniverses.getJSONObject(i).getString("Type"), jUniverses.getJSONObject(i).getString("Function"), jUniverses.getJSONObject(i).getInt("Aridad"), jUniverses.getJSONObject(i).getBoolean("Equal"), jUniverses.getJSONObject(i).getBoolean("Greater"), jUniverses.getJSONObject(i).getBoolean("Greater_equal"), jUniverses.getJSONObject(i).getBoolean("Not_equal"), jUniverses.getJSONObject(i).getBoolean("Less"), jUniverses.getJSONObject(i).getBoolean("Less_equal"));
+                    new Universe(jUniverses.getJSONObject(i).getString("Name"), jUniverses.getJSONObject(i).getString("Type"), ALFunctions, jUniverses.getJSONObject(i).getBoolean("Equal"), jUniverses.getJSONObject(i).getBoolean("Greater"), jUniverses.getJSONObject(i).getBoolean("Greater_equal"), jUniverses.getJSONObject(i).getBoolean("Not_equal"), jUniverses.getJSONObject(i).getBoolean("Less"), jUniverses.getJSONObject(i).getBoolean("Less_equal"));
                 default ->
                     throw new AssertionError();
             };
@@ -2023,6 +2467,7 @@ public class Inicio extends javax.swing.JFrame {
         listModelImplicacionesNot1.removeAllElements(); // Clear the list
         listModelImplicacionesNot2.removeAllElements(); // Clear the list
         listModelImplicacionesList.removeAllElements(); // Clear the list
+
         colImplication.empty(); // Clear the list
 
         for (int i = 0; i < jImplications.length(); i++) {
@@ -2031,10 +2476,12 @@ public class Inicio extends javax.swing.JFrame {
                     jImplications.getJSONObject(i).getString("Relation1"),
                     jImplications.getJSONObject(i).getString("Value1"),
                     jImplications.getJSONObject(i).getBoolean("Negated1"),
+                    jImplications.getJSONObject(i).getBoolean("ValueFunction1"),
                     colVariable.find(jImplications.getJSONObject(i).getString("Variable2"), Variable::getNickname),
                     jImplications.getJSONObject(i).getString("Relation2"),
                     jImplications.getJSONObject(i).getString("Value2"),
-                    jImplications.getJSONObject(i).getBoolean("Negated2"));
+                    jImplications.getJSONObject(i).getBoolean("Negated2"),
+                    jImplications.getJSONObject(i).getBoolean("ValueFunction2"));
 
             colImplication.add(implication);
 
@@ -2088,12 +2535,15 @@ public class Inicio extends javax.swing.JFrame {
     private void jTabbedPane1StateChanged(javax.swing.event.ChangeEvent evt) {
         switch (jTabbedPane1.getSelectedIndex()) {
             case 2:
-                eventoTabVariables();
+                eventoTabUniverses();
                 break;
             case 3:
-                eventoTabImplicaciones();
+                eventoTabVariables();
                 break;
             case 4:
+                eventoTabImplicaciones();
+                break;
+            case 5:
                 eventoTabGeneracion();
                 break;
             default:
@@ -2159,7 +2609,7 @@ public class Inicio extends javax.swing.JFrame {
         if (jTextField6.getText().isEmpty()) {
             jTextField6.grabFocus();
             jLabel17.setText("<html>You cannot leave the name blank.</html>");
-        } else if (colConstruct.containsName(jTextField6.getText())) {
+        } else if ("Add".equals(jButton13.getText()) && colConstruct.containsName(jTextField6.getText())) {
             jTextField6.grabFocus();
             jLabel17.setText("<html>You cannot add duplicate names.</html>");
         } else if (jTextField7.getText().isEmpty()) {
@@ -2176,7 +2626,7 @@ public class Inicio extends javax.swing.JFrame {
             } else {
                 colConstruct.set(selectedIndexConstruct, construct);
                 jLabel17.setText("<html>The construct has been edited successfully.</html>");
-                jButton23.setText("Edit");
+                jButton23.setText("Mode edit");
                 jButton13.setText("Add");
             }
         }
@@ -2282,17 +2732,12 @@ public class Inicio extends javax.swing.JFrame {
             jTextField9.grabFocus();
             jLabel21.setText("<html>You cannot leave the name blank.</html>");
             return;
-        } else if (colUniverse.containsName(jTextField9.getText())) {
+        } else if ("Add".equals(jButton18.getText()) && colUniverse.containsName(jTextField9.getText())) {
             jTextField9.grabFocus();
             jLabel21.setText("<html>You cannot add duplicate names.</html>");
             return;
         }
-        int aridad;
-        try {
-            aridad = Integer.parseInt(jTextField11.getText());
-        } catch (NumberFormatException e) {
-            aridad = 0;
-        }
+        ArrayList<Function> ALFunction = getSelectedFunctions(jComboBox8);
         switch (jComboBox5.getSelectedIndex()) {
             case 0, 1: //Enums
                 if (jTextField12.getText().isEmpty()) {
@@ -2300,7 +2745,7 @@ public class Inicio extends javax.swing.JFrame {
                     jLabel21.setText("<html>You cannot leave the Enum Values<br/>blank.</html>");
                     return;
                 } else {
-                    Universe universe = new Universe(jTextField9.getText().trim(), (String) jComboBox5.getSelectedItem(), jTextField12.getText().trim(), jTextField10.getText().trim(), aridad, jCheckBox3.isSelected(), jCheckBox4.isSelected(), jCheckBox5.isSelected(), jCheckBox6.isSelected(), jCheckBox7.isSelected(), jCheckBox8.isSelected());
+                    Universe universe = new Universe(jTextField9.getText().trim(), (String) jComboBox5.getSelectedItem(), jTextField12.getText().trim(), ALFunction, jCheckBox3.isSelected(), jCheckBox4.isSelected(), jCheckBox5.isSelected(), jCheckBox6.isSelected(), jCheckBox7.isSelected(), jCheckBox8.isSelected());
 
                     if ("Add".equals(jButton18.getText())) {
                         colUniverse.add(universe);
@@ -2331,7 +2776,7 @@ public class Inicio extends javax.swing.JFrame {
                     } catch (NumberFormatException e) {
                         min = Double.MAX_VALUE;
                     }
-                    Universe universe = new Universe(jTextField9.getText().trim(), (String) jComboBox5.getSelectedItem(), min, max, jTextField10.getText().trim(), aridad, jCheckBox3.isSelected(), jCheckBox4.isSelected(), jCheckBox5.isSelected(), jCheckBox6.isSelected(), jCheckBox7.isSelected(), jCheckBox8.isSelected());
+                    Universe universe = new Universe(jTextField9.getText().trim(), (String) jComboBox5.getSelectedItem(), min, max, ALFunction, jCheckBox3.isSelected(), jCheckBox4.isSelected(), jCheckBox5.isSelected(), jCheckBox6.isSelected(), jCheckBox7.isSelected(), jCheckBox8.isSelected());
 
                     if ("Add".equals(jButton18.getText())) {
                         colUniverse.add(universe);
@@ -2341,7 +2786,7 @@ public class Inicio extends javax.swing.JFrame {
                 }
                 break;
             case 3: //Bool 
-                Universe universe = new Universe(jTextField9.getText().trim(), (String) jComboBox5.getSelectedItem(), jTextField10.getText().trim(), aridad, jCheckBox3.isSelected(), jCheckBox4.isSelected(), jCheckBox5.isSelected(), jCheckBox6.isSelected(), jCheckBox7.isSelected(), jCheckBox8.isSelected());
+                Universe universe = new Universe(jTextField9.getText().trim(), (String) jComboBox5.getSelectedItem(), ALFunction, jCheckBox3.isSelected(), jCheckBox4.isSelected(), jCheckBox5.isSelected(), jCheckBox6.isSelected(), jCheckBox7.isSelected(), jCheckBox8.isSelected());
 
                 if ("Add".equals(jButton18.getText())) {
                     colUniverse.add(universe);
@@ -2357,7 +2802,7 @@ public class Inicio extends javax.swing.JFrame {
         } else {
             jLabel21.setText("<html>The Universe has been edited successfully!</html>");
             jButton18.setText("Add");
-            jButton24.setText("Edit");
+            jButton24.setText("Mode edit");
         }
         utils.emptyMatriz();
     }//GEN-LAST:event_jButton18ActionPerformed
@@ -2523,13 +2968,28 @@ public class Inicio extends javax.swing.JFrame {
                 case "Enum (Collection)" -> {
                     String[] values = variable.getUniverse().getValueEnum().split(",");
                     for (String value : values) {
-                        jComboBox13.addItem(new CheckComboItem(value));
+                        CheckComboItem item = new CheckComboItem(value.trim());
+                        item.setSelected(false);
+                        jComboBox13.addItem(item);
                     }
                 }
                 case "Bool" -> {
                     CombolistModelValues2.addElement("True");
                     CombolistModelValues2.addElement("False");
                 }
+            }
+
+            jComboBox14.removeAllItems();
+            ArrayList<Function> functions = variable.getUniverse().getFunctions();
+            for (Function function : functions) {
+                jComboBox14.addItem(function.toString().trim());
+            }
+            jComboBox14.setSelectedIndex(-1);
+            jRadioButton12.setSelected(true);
+            if (functions.isEmpty()) {
+                jRadioButton13.setEnabled(false);
+            } else {
+                jRadioButton13.setEnabled(true);
             }
         }
     }//GEN-LAST:event_jComboBox3ActionPerformed
@@ -2589,13 +3049,28 @@ public class Inicio extends javax.swing.JFrame {
                 case "Enum (Collection)" -> {
                     String[] values = variable.getUniverse().getValueEnum().split(",");
                     for (String value : values) {
-                        jComboBox11.addItem(new CheckComboItem(value));
+                        CheckComboItem item = new CheckComboItem(value.trim());
+                        item.setSelected(false);
+                        jComboBox11.addItem(item);
                     }
                 }
                 case "Bool" -> {
                     CombolistModelValues1.addElement("True");
                     CombolistModelValues1.addElement("False");
                 }
+            }
+
+            jComboBox15.removeAllItems();
+            ArrayList<Function> functions = variable.getUniverse().getFunctions();
+            for (Function function : functions) {
+                jComboBox15.addItem(function.toString().trim());
+            }
+            jComboBox15.setSelectedIndex(-1);
+            jRadioButton10.setSelected(true);
+            if (functions.isEmpty()) {
+                jRadioButton11.setEnabled(false);
+            } else {
+                jRadioButton11.setEnabled(true);
             }
         }
     }//GEN-LAST:event_jComboBox1ActionPerformed
@@ -2612,8 +3087,8 @@ public class Inicio extends javax.swing.JFrame {
      * @param evt the Swing action event triggered by clicking the button
      */
     private void jButton23ActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_jButton23ActionPerformed
-        if (jButton23.getText().equals("Cancel")) {
-            jButton23.setText("Edit");
+        if (jButton23.getText().equals("Mode add")) {
+            jButton23.setText("Mode edit");
             jButton13.setText("Add");
             selectedIndexConstruct = -1;
             jTextField6.setText("");
@@ -2627,7 +3102,7 @@ public class Inicio extends javax.swing.JFrame {
                 jTextField6.setText(construct.getName());
                 jTextField7.setText(construct.getFrom());
                 jTextField8.setText(construct.getScope());
-                jButton23.setText("Cancel");
+                jButton23.setText("Mode add");
                 jButton13.setText("Save");
                 jLabel17.setText("");
             } else {
@@ -2648,13 +3123,14 @@ public class Inicio extends javax.swing.JFrame {
      * @param evt the Swing action event triggered by clicking the button
      */
     private void jButton24ActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_jButton24ActionPerformed
-        if (jButton24.getText().equals("Cancel")) {
-            jButton24.setText("Edit");
+        if (jButton24.getText().equals("Mode add")) {
+            jButton24.setText("Mode edit");
             jButton18.setText("Add");
             selectedIndexUniverse = -1;
             jTextField9.setText("");
-            jTextField10.setText("");
-            jTextField11.setText("");
+
+            unSelectedFunctions(jComboBox8);
+
             jTextField12.setText("");
             jTextField13.setText("");
             jTextField14.setText("");
@@ -2672,8 +3148,7 @@ public class Inicio extends javax.swing.JFrame {
                 Universe universe = colUniverse.getModelElement().elementAt(selectedIndexUniverse);
 
                 jTextField9.setText(universe.getName());
-                jTextField10.setText(universe.getFunction());
-                jTextField11.setText(String.valueOf(universe.getAridad()));
+                setSelectedFunctions(jComboBox8, universe.getFunctions());
                 switch (universe.getType()) {
                     case "Enum (Scalar)" -> {
                         jComboBox5.setSelectedIndex(0);
@@ -2709,7 +3184,7 @@ public class Inicio extends javax.swing.JFrame {
                 jCheckBox7.setSelected(universe.isLess());
                 jCheckBox8.setSelected(universe.isLess_equal());
 
-                jButton24.setText("Cancel");
+                jButton24.setText("Mode add");
                 jButton18.setText("Save");
                 jLabel21.setText("");
             } else {
@@ -2730,8 +3205,8 @@ public class Inicio extends javax.swing.JFrame {
      * @param evt the Swing action event triggered by clicking the button
      */
     private void jButton25ActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_jButton25ActionPerformed
-        if (jButton25.getText().equals("Cancel")) {
-            jButton25.setText("Edit");
+        if (jButton25.getText().equals("Mode add")) {
+            jButton25.setText("Mode edit");
             jButton1.setText("Add");
             selectedIndexVariable = -1;
             jTextField1.setText("");
@@ -2747,7 +3222,7 @@ public class Inicio extends javax.swing.JFrame {
                 jTextField2.setText(variable.getNickname());
                 jComboBox6.setSelectedItem(variable.getConstruct().getName());
                 jComboBox7.setSelectedItem(variable.getUniverse().getName());
-                jButton25.setText("Cancel");
+                jButton25.setText("Mode add");
                 jButton1.setText("Save");
                 jLabel3.setText("");
             } else {
@@ -2768,8 +3243,8 @@ public class Inicio extends javax.swing.JFrame {
      * @param evt the Swing action event triggered by clicking the button
      */
     private void jButton26ActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_jButton26ActionPerformed
-        if (jButton26.getText().equals("Cancel")) {
-            jButton26.setText("Edit");
+        if (jButton26.getText().equals("Mode add")) {
+            jButton26.setText("Mode edit");
             jButton6.setText("Add");
             selectedIndexImplication = -1;
             jComboBox1.setSelectedIndex(0);
@@ -2782,6 +3257,8 @@ public class Inicio extends javax.swing.JFrame {
             jCheckBox2.setSelected(false);
             jList2.setSelectedIndex(-1);
             jList5.setSelectedIndex(-1);
+            jRadioButton10.setSelected(true);
+            jRadioButton12.setSelected(true);
         } else {
             selectedIndexImplication = jList2.getSelectedIndex();
             if (selectedIndexImplication != -1) {
@@ -2792,31 +3269,50 @@ public class Inicio extends javax.swing.JFrame {
                 jComboBox2.setSelectedItem(implication.getRelation1());
                 jComboBox3.setSelectedItem(implication.getVariable2().getNickname());
                 jComboBox4.setSelectedItem(implication.getRelation2());
-                switch (implication.getVariable1().getUniverse().getType()) {
-                    case "Enum (Scalar)", "Bool" ->
-                        jComboBox10.setSelectedItem(implication.getValue1());
-                    case "Enum (Collection)" ->
-                        jComboBox11.setSelectedItem(implication.getValue1());
-                    case "Real" ->
-                        jTextField4.setText(implication.getValue1());
-                    default ->
-                        throw new AssertionError();
+                if (implication.isValueFunction1()) {
+                    switch (implication.getVariable1().getUniverse().getType()) {
+                        case "Enum (Scalar)", "Bool" ->
+                            jComboBox10.setSelectedItem(implication.getValue1().trim());
+                        case "Enum (Collection)" -> {
+                            String[] partsVal = implication.getValue1().substring(1, implication.getValue1().length() - 1).split(",");
+                            setSelectedItems(jComboBox11, partsVal);
+                        }
+                        case "Real" ->
+                            jTextField4.setText(implication.getValue1());
+                        default ->
+                            throw new AssertionError();
+                    }
+                    jRadioButton10.setSelected(true);
+                } else {
+                    jComboBox15.setSelectedItem(implication.getValue1().trim());
+                    jRadioButton11.setSelected(true);
+                    CardLayout cl = (CardLayout) jPanel11.getLayout();
+                    cl.show(jPanel11, "card-comboFunc1");
                 }
 
-                switch (implication.getVariable2().getUniverse().getType()) {
-                    case "Enum (Scalar)", "Bool" ->
-                        jComboBox12.setSelectedItem(implication.getValue2());
-                    case "Enum (Collection)" ->
-                        jComboBox13.setSelectedItem(implication.getValue2());
-                    case "Real" ->
-                        jTextField15.setText(implication.getValue2());
-                    default ->
-                        throw new AssertionError();
+                if (implication.isValueFunction2()) {
+                    switch (implication.getVariable2().getUniverse().getType()) {
+                        case "Enum (Scalar)", "Bool" ->
+                            jComboBox12.setSelectedItem(implication.getValue2().trim());
+                        case "Enum (Collection)" -> {
+                            String[] partsVal = implication.getValue2().substring(1, implication.getValue2().length() - 1).split(",");
+                            setSelectedItems(jComboBox13, partsVal);
+                        }
+                        case "Real" ->
+                            jTextField15.setText(implication.getValue2());
+                        default ->
+                            throw new AssertionError();
+                    }
+                    jRadioButton12.setSelected(true);
+                } else {
+                    jComboBox14.setSelectedItem(implication.getValue2().trim());
+                    jRadioButton13.setSelected(true);
+                    CardLayout cl = (CardLayout) jPanel18.getLayout();
+                    cl.show(jPanel18, "card-comboFunc2");
                 }
-
                 jCheckBox1.setSelected(implication.isNegated1());
                 jCheckBox2.setSelected(implication.isNegated2());
-                jButton26.setText("Cancel");
+                jButton26.setText("Mode add");
                 jButton6.setText("Save");
                 jLabel11.setText("");
             } else {
@@ -2824,6 +3320,215 @@ public class Inicio extends javax.swing.JFrame {
             }
         }
     }//GEN-LAST:event_jButton26ActionPerformed
+
+    /**
+     * Maneja el botón Add en la pestaña Functions.
+     * <p>
+     * Valida nombre y aridad, evita duplicados y añade/edita la función en la
+     * colección correspondiente.
+     * </p>
+     *
+     * @param evt evento de acción de Swing
+     */
+    private void jButton27ActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_jButton27ActionPerformed
+        if (jTextField17.getText().isEmpty()) {
+            jTextField17.grabFocus();
+            jLabel35.setText("<html>You cannot leave the name function blank.</html>");
+        } else if ("Add".equals(jButton27.getText()) && colFunction.containsName(jTextField17.getText())) {
+            jTextField17.grabFocus();
+            jLabel35.setText("<html>You cannot add duplicate names.</html>");
+        } else if (jTextField16.getText().isEmpty()) {
+            jTextField16.grabFocus();
+            jLabel35.setText("<html>You cannot leave the aridad of the function blank.</html>");
+        } else {
+            int aridad = 0;
+            try {
+                aridad = Integer.parseUnsignedInt(jTextField16.getText());
+            } catch (NumberFormatException e) {
+                jTextField16.grabFocus();
+                jLabel35.setText("<html>The aridad must be a positive number.</html>");
+                return;
+            }
+            Function function = new Function(jTextField17.getText().trim(), aridad);
+            if ("Add".equals(jButton27.getText())) {
+                colFunction.add(function);
+                jLabel35.setText("<html>The function has been added successfully.</html>");
+            } else {
+                colFunction.set(selectedIndexFunctions, function);
+                jLabel35.setText("<html>The function has been edited successfully.</html>");
+                jButton29.setText("Mode edit");
+                jButton27.setText("Add");
+            }
+        }
+        utils.emptyMatriz();
+    }//GEN-LAST:event_jButton27ActionPerformed
+
+    /**
+     * Maneja el botón Del en la pestaña Functions.
+     * <p>
+     * Elimina la función seleccionada si existe una selección.
+     * </p>
+     *
+     * @param evt evento de acción de Swing
+     */
+    private void jButton28ActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_jButton28ActionPerformed
+        int selectedIndex = jList6.getSelectedIndex();
+        if (selectedIndex != -1) {
+            colFunction.remove(selectedIndex);
+        } else {
+            jLabel35.setText("<html>Select an item to delete.</html>");
+        }
+        utils.emptyMatriz();
+    }//GEN-LAST:event_jButton28ActionPerformed
+
+    /**
+     * Conmuta el modo edición/alta en la pestaña Functions.
+     * <p>
+     * Carga la función seleccionada para edición o cancela la edición y limpia
+     * el formulario.
+     * </p>
+     *
+     * @param evt evento de acción de Swing
+     */
+    private void jButton29ActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_jButton29ActionPerformed
+        if (jButton29.getText().equals("Mode add")) {
+            jButton29.setText("Mode edit");
+            jButton27.setText("Add");
+            selectedIndexFunctions = -1;
+            jList6.setSelectedIndex(-1);
+        } else {
+            selectedIndexFunctions = jList6.getSelectedIndex();
+            if (selectedIndexFunctions != -1) {
+                Function function = colFunction.getModelElement().elementAt(selectedIndexFunctions);
+                jTextField17.setText(function.getName());
+                jTextField16.setText(Integer.toString(function.getAridad()));
+                jButton29.setText("Mode add");
+                jButton27.setText("Save");
+                jLabel35.setText("");
+            } else {
+                jLabel35.setText("<html>Select an item to edit.</html>");
+            }
+        }
+    }//GEN-LAST:event_jButton29ActionPerformed
+
+    /**
+     * Sube una posición la función seleccionada en la lista.
+     *
+     * @param evt evento de acción de Swing
+     */
+    private void jButton30ActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_jButton30ActionPerformed
+        int selectedIndex = jList6.getSelectedIndex();
+        if (selectedIndex != -1) {
+            if (colFunction.indexUp(selectedIndex)) {
+                jList6.setSelectedIndex(selectedIndex - 1);
+                jLabel35.setText("<html>Item moved.</html>");
+            } else {
+                jLabel35.setText("<html>The selected item cannot be moved up further.</html>");
+            }
+        } else {
+            jLabel35.setText("<html>Select an item to move up.</html>");
+        }
+        utils.emptyMatriz();
+    }//GEN-LAST:event_jButton30ActionPerformed
+
+    /**
+     * Baja una posición la función seleccionada en la lista.
+     *
+     * @param evt evento de acción de Swing
+     */
+    private void jButton31ActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_jButton31ActionPerformed
+        int selectedIndex = jList6.getSelectedIndex();
+        if (selectedIndex != -1) {
+            if (colFunction.indexDown(selectedIndex)) {
+                jList6.setSelectedIndex(selectedIndex + 1);
+                jLabel35.setText("<html>Item moved.</html>");
+            } else {
+                jLabel35.setText("<html>The selected item cannot be moved down further.</html>");
+            }
+        } else {
+            jLabel35.setText("<html>Select an item to move down.</html>");
+        }
+        utils.emptyMatriz();
+    }//GEN-LAST:event_jButton31ActionPerformed
+
+    /**
+     * Limpia completamente la lista de funciones.
+     *
+     * @param evt evento de acción de Swing
+     */
+    private void jButton32ActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_jButton32ActionPerformed
+        colFunction.empty();
+        jLabel35.setText("<html>The list has been cleared successfully.</html>");
+        utils.emptyMatriz();
+    }//GEN-LAST:event_jButton32ActionPerformed
+
+    /**
+     * Selecciona el modo Valor para el literal 1 y muestra el editor adecuado
+     * según el tipo del universo (combo, combo múltiple o campo numérico).
+     *
+     * @param evt evento de acción de Swing
+     */
+    private void jRadioButton10ActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_jRadioButton10ActionPerformed
+        Variable variable = colVariable.find((String) jComboBox1.getSelectedItem(), Variable::getNickname);
+        if (variable != null) {
+
+            CardLayout cl = (CardLayout) jPanel11.getLayout();
+
+            switch (variable.getUniverse().getType()) {
+                case "Enum (Scalar)", "Bool" ->
+                    cl.show(jPanel11, "card-combo1");
+                case "Enum (Collection)" ->
+                    cl.show(jPanel11, "card-comboCol1");
+                case "Real" ->
+                    cl.show(jPanel11, "card-text1");
+            }
+        }
+    }//GEN-LAST:event_jRadioButton10ActionPerformed
+
+    /**
+     * Selecciona el modo Función para el literal 1 y muestra el selector de
+     * funciones.
+     *
+     * @param evt evento de acción de Swing
+     */
+    private void jRadioButton11ActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_jRadioButton11ActionPerformed
+        CardLayout cl = (CardLayout) jPanel11.getLayout();
+        cl.show(jPanel11, "card-comboFunc1");
+    }//GEN-LAST:event_jRadioButton11ActionPerformed
+
+    /**
+     * Selecciona el modo Valor para el literal 2 y muestra el editor adecuado
+     * según el tipo del universo (combo, combo múltiple o campo numérico).
+     *
+     * @param evt evento de acción de Swing
+     */
+    private void jRadioButton12ActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_jRadioButton12ActionPerformed
+        Variable variable = colVariable.find((String) jComboBox3.getSelectedItem(), Variable::getNickname);
+        if (variable != null) {
+
+            CardLayout cl = (CardLayout) jPanel18.getLayout();
+
+            switch (variable.getUniverse().getType()) {
+                case "Enum (Scalar)", "Bool" ->
+                    cl.show(jPanel18, "card-combo2");
+                case "Enum (Collection)" ->
+                    cl.show(jPanel18, "card-comboCol2");
+                case "Real" ->
+                    cl.show(jPanel18, "card-text2");
+            }
+        }
+    }//GEN-LAST:event_jRadioButton12ActionPerformed
+
+    /**
+     * Selecciona el modo Función para el literal 2 y muestra el selector de
+     * funciones.
+     *
+     * @param evt evento de acción de Swing
+     */
+    private void jRadioButton13ActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_jRadioButton13ActionPerformed
+        CardLayout cl = (CardLayout) jPanel18.getLayout();
+        cl.show(jPanel18, "card-comboFunc2");
+    }//GEN-LAST:event_jRadioButton13ActionPerformed
 
     /**
      * Opens a new window showing the selected model matrix as a table.
@@ -3021,6 +3726,23 @@ public class Inicio extends javax.swing.JFrame {
     }
 
     /**
+     * Refreshes combo boxes on the Universes tab when the tab becomes active.
+     * <p>
+     * Populates the functions combo box models with the current elements stored
+     * in {@link #colFunction}.
+     * </p>
+     */
+    private void eventoTabUniverses() {
+        CombolistModelFunctions.removeAllElements();
+        DefaultListModel<Function> listModelFunctions = colFunction.getModelElement();
+        for (int i = 0; i < listModelFunctions.size(); i++) {
+            CheckComboItem item = new CheckComboItem(listModelFunctions.get(i).toString().trim());
+            item.setSelected(false);
+            CombolistModelFunctions.addElement(item);
+        }
+    }
+
+    /**
      * Refreshes combo boxes on the Variables tab when the tab becomes active.
      * <p>
      * Populates the construct and universe combo box models with the current
@@ -3177,6 +3899,8 @@ public class Inicio extends javax.swing.JFrame {
     // Variables declaration - do not modify//GEN-BEGIN:variables
     private javax.swing.ButtonGroup buttonGroup1;
     private javax.swing.ButtonGroup buttonGroup2;
+    private javax.swing.ButtonGroup buttonGroup3;
+    private javax.swing.ButtonGroup buttonGroup4;
     private javax.swing.JButton jButton1;
     private javax.swing.JButton jButton10;
     private javax.swing.JButton jButton11;
@@ -3196,7 +3920,13 @@ public class Inicio extends javax.swing.JFrame {
     private javax.swing.JButton jButton24;
     private javax.swing.JButton jButton25;
     private javax.swing.JButton jButton26;
+    private javax.swing.JButton jButton27;
+    private javax.swing.JButton jButton28;
+    private javax.swing.JButton jButton29;
     private javax.swing.JButton jButton3;
+    private javax.swing.JButton jButton30;
+    private javax.swing.JButton jButton31;
+    private javax.swing.JButton jButton32;
     private javax.swing.JButton jButton4;
     private javax.swing.JButton jButton5;
     private javax.swing.JButton jButton6;
@@ -3216,14 +3946,16 @@ public class Inicio extends javax.swing.JFrame {
     private javax.swing.JComboBox<CheckComboItem> jComboBox11;
     private javax.swing.JComboBox<String> jComboBox12;
     private javax.swing.JComboBox<CheckComboItem> jComboBox13;
+    private javax.swing.JComboBox<String> jComboBox14;
+    private javax.swing.JComboBox<String> jComboBox15;
     private javax.swing.JComboBox<String> jComboBox2;
     private javax.swing.JComboBox<String> jComboBox3;
     private javax.swing.JComboBox<String> jComboBox4;
     private javax.swing.JComboBox<String> jComboBox5;
     private javax.swing.JComboBox<String> jComboBox6;
     private javax.swing.JComboBox<String> jComboBox7;
+    private javax.swing.JComboBox<CheckComboItem> jComboBox8;
     private javax.swing.JLabel jLabel1;
-    private javax.swing.JLabel jLabel10;
     private javax.swing.JLabel jLabel11;
     private javax.swing.JLabel jLabel12;
     private javax.swing.JLabel jLabel13;
@@ -3234,7 +3966,6 @@ public class Inicio extends javax.swing.JFrame {
     private javax.swing.JLabel jLabel18;
     private javax.swing.JLabel jLabel19;
     private javax.swing.JLabel jLabel2;
-    private javax.swing.JLabel jLabel20;
     private javax.swing.JLabel jLabel21;
     private javax.swing.JLabel jLabel22;
     private javax.swing.JLabel jLabel23;
@@ -3242,16 +3973,17 @@ public class Inicio extends javax.swing.JFrame {
     private javax.swing.JLabel jLabel25;
     private javax.swing.JLabel jLabel26;
     private javax.swing.JLabel jLabel27;
-    private javax.swing.JLabel jLabel28;
     private javax.swing.JLabel jLabel29;
     private javax.swing.JLabel jLabel3;
     private javax.swing.JLabel jLabel30;
     private javax.swing.JLabel jLabel31;
     private javax.swing.JLabel jLabel32;
+    private javax.swing.JLabel jLabel33;
+    private javax.swing.JLabel jLabel34;
+    private javax.swing.JLabel jLabel35;
     private javax.swing.JLabel jLabel4;
     private javax.swing.JLabel jLabel5;
     private javax.swing.JLabel jLabel6;
-    private javax.swing.JLabel jLabel7;
     private javax.swing.JLabel jLabel8;
     private javax.swing.JLabel jLabel9;
     private javax.swing.JList<String> jList1;
@@ -3259,6 +3991,7 @@ public class Inicio extends javax.swing.JFrame {
     private javax.swing.JList<String> jList3;
     private javax.swing.JList<String> jList4;
     private javax.swing.JList<String> jList5;
+    private javax.swing.JList<String> jList6;
     private javax.swing.JMenu jMenu1;
     private javax.swing.JMenuBar jMenuBar1;
     private javax.swing.JMenuItem jMenuItem1;
@@ -3269,11 +4002,14 @@ public class Inicio extends javax.swing.JFrame {
     private javax.swing.JPanel jPanel12;
     private javax.swing.JPanel jPanel13;
     private javax.swing.JPanel jPanel14;
+    private javax.swing.JPanel jPanel15;
     private javax.swing.JPanel jPanel16;
     private javax.swing.JPanel jPanel17;
     private javax.swing.JPanel jPanel18;
     private javax.swing.JPanel jPanel19;
     private javax.swing.JPanel jPanel2;
+    private javax.swing.JPanel jPanel20;
+    private javax.swing.JPanel jPanel21;
     private javax.swing.JPanel jPanel3;
     private javax.swing.JPanel jPanel4;
     private javax.swing.JPanel jPanel5;
@@ -3282,6 +4018,10 @@ public class Inicio extends javax.swing.JFrame {
     private javax.swing.JPanel jPanel8;
     private javax.swing.JPanel jPanel9;
     private javax.swing.JRadioButton jRadioButton1;
+    private javax.swing.JRadioButton jRadioButton10;
+    private javax.swing.JRadioButton jRadioButton11;
+    private javax.swing.JRadioButton jRadioButton12;
+    private javax.swing.JRadioButton jRadioButton13;
     private javax.swing.JRadioButton jRadioButton2;
     private javax.swing.JRadioButton jRadioButton3;
     private javax.swing.JRadioButton jRadioButton4;
@@ -3297,6 +4037,7 @@ public class Inicio extends javax.swing.JFrame {
     private javax.swing.JScrollPane jScrollPane5;
     private javax.swing.JScrollPane jScrollPane6;
     private javax.swing.JScrollPane jScrollPane7;
+    private javax.swing.JScrollPane jScrollPane8;
     private javax.swing.JSeparator jSeparator1;
     private javax.swing.JSeparator jSeparator2;
     private javax.swing.JSeparator jSeparator3;
@@ -3304,12 +4045,12 @@ public class Inicio extends javax.swing.JFrame {
     private javax.swing.JTextArea jTextArea1;
     private javax.swing.JTextArea jTextArea2;
     private javax.swing.JTextField jTextField1;
-    private javax.swing.JTextField jTextField10;
-    private javax.swing.JTextField jTextField11;
     private javax.swing.JTextField jTextField12;
     private javax.swing.JTextField jTextField13;
     private javax.swing.JTextField jTextField14;
     private javax.swing.JTextField jTextField15;
+    private javax.swing.JTextField jTextField16;
+    private javax.swing.JTextField jTextField17;
     private javax.swing.JTextField jTextField2;
     private javax.swing.JTextField jTextField4;
     private javax.swing.JTextField jTextField6;

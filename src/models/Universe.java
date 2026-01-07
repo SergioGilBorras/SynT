@@ -1,9 +1,6 @@
 package models;
 
-/*
- * Click nbfs://nbhost/SystemFileSystem/Templates/Licenses/license-default.txt to change this license
- * Click nbfs://nbhost/SystemFileSystem/Templates/Classes/Class.java to edit this template
- */
+import java.util.ArrayList;
 
 /**
  * Represents a universe (domain) for variables in the theory.
@@ -20,7 +17,8 @@ public class Universe implements Element {
      */
     private String name;
     /**
-     * Universe type (e.g. {@code "Enum (Scalar)"}, {@code "Real"}, {@code "Bool"}).
+     * Universe type (e.g.
+     * {@code "Enum (Scalar)"}, {@code "Real"}, {@code "Bool"}).
      */
     private final String type;
     /**
@@ -40,11 +38,7 @@ public class Universe implements Element {
      * Optional function associated with the universe (e.g. aggregation
      * function).
      */
-    private String function;
-    /**
-     * Arity of the function associated with the universe.
-     */
-    private int aridad;
+    private ArrayList<Function> functions;
     /**
      * Whether equality (=) is allowed for variables in this universe.
      */
@@ -71,26 +65,25 @@ public class Universe implements Element {
     private boolean less_equal;
 
     /**
-     * Creates an enumerated universe.
+     * Creates an enumerated universe with a fixed set of constant values and
+     * explicit relation permissions.
      *
-     * @param name         the universe name
-     * @param type         the type string (enum variant)
-     * @param valueEnum    the semicolon-separated list of allowed values
-     * @param function     optional function name associated with the universe
-     * @param aridad       arity of the function
-     * @param equal        whether equality is allowed
-     * @param greater      whether > is allowed
-     * @param greater_equal whether >= is allowed
-     * @param not_equal     whether != is allowed
-     * @param less         whether < is allowed
-     * @param less_equal   whether <= is allowed
+     * @param name the universe name; whitespace is trimmed before storing
+     * @param type textual type label (e.g. {@code "Enum (Scalar)"})
+     * @param valueEnum semicolon-separated list of the allowed enumeration values
+     * @param functions list of functions (e.g. aggregations) tied to this universe
+     * @param equal {@code true} if equality (=) is permitted between variables
+     * @param greater {@code true} if the strict greater-than (>) relation is permitted
+     * @param greater_equal {@code true} if the greater-or-equal (>=) relation is permitted
+     * @param not_equal {@code true} if inequality (!=) is permitted
+     * @param less {@code true} if the strict less-than (<) relation is permitted
+     * @param less_equal {@code true} if the less-or-equal (<=) relation is permitted
      */
-    public Universe(String name, String type, String valueEnum, String function, int aridad, boolean equal, boolean greater, boolean greater_equal, boolean not_equal, boolean less, boolean less_equal) {
+    public Universe(String name, String type, String valueEnum, ArrayList<Function> functions, boolean equal, boolean greater, boolean greater_equal, boolean not_equal, boolean less, boolean less_equal) {
         this.name = name;
         this.type = type;
         this.valueEnum = valueEnum;
-        this.function = function;
-        this.aridad = aridad;
+        this.functions = functions;
         this.equal = equal;
         this.greater = greater;
         this.greater_equal = greater_equal;
@@ -100,28 +93,27 @@ public class Universe implements Element {
     }
 
     /**
-     * Creates a real-valued universe.
+     * Creates a real-valued universe that controls a numeric range and the
+     * permitted relations.
      *
-     * @param name          the universe name
-     * @param type          the type string (real variant)
-     * @param valueMin      minimum allowed value
-     * @param valueMax      maximum allowed value
-     * @param function      optional function name associated with the universe
-     * @param aridad        arity of the function
-     * @param equal         whether equality is allowed
-     * @param greater       whether > is allowed
-     * @param greater_equal whether >= is allowed
-     * @param not_equal      whether != is allowed
-     * @param less          whether < is allowed
-     * @param less_equal    whether <= is allowed
+     * @param name nombre con el que se identifica el universo
+     * @param type etiqueta de tipo (por ejemplo, {@code "Real"})
+     * @param valueMin límite inferior permitido
+     * @param valueMax límite superior permitido
+     * @param functions lista de funciones admitidas dentro de este universo
+     * @param equal {@code true} si se admite la igualdad (=)
+     * @param greater {@code true} si se permite la relación estricta mayor que (>)
+     * @param greater_equal {@code true} si se permite mayor o igual (>=)
+     * @param not_equal {@code true} si se permite la desigualdad (!=)
+     * @param less {@code true} si se permite la relación estricta menor que (<)
+     * @param less_equal {@code true} si se permite menor o igual (<=)
      */
-    public Universe(String name, String type, double valueMin, double valueMax, String function, int aridad, boolean equal, boolean greater, boolean greater_equal, boolean not_equal, boolean less, boolean less_equal) {
+    public Universe(String name, String type, double valueMin, double valueMax, ArrayList<Function> functions, boolean equal, boolean greater, boolean greater_equal, boolean not_equal, boolean less, boolean less_equal) {
         this.name = name;
         this.type = type;
         this.valueMin = valueMin;
         this.valueMax = valueMax;
-        this.function = function;
-        this.aridad = aridad;
+        this.functions = functions;
         this.equal = equal;
         this.greater = greater;
         this.greater_equal = greater_equal;
@@ -131,24 +123,23 @@ public class Universe implements Element {
     }
 
     /**
-     * Creates a boolean universe.
+     * Creates a boolean universe that permits only {@code true}/{@code false} and
+     * exposes the available comparison relations.
      *
-     * @param name          the universe name
-     * @param type          the type string (boolean variant)
-     * @param function      optional function name associated with the universe
-     * @param aridad        arity of the function
-     * @param equal         whether equality is allowed
-     * @param greater       whether > is allowed
-     * @param greater_equal whether >= is allowed
-     * @param not_equal      whether != is allowed
-     * @param less          whether < is allowed
-     * @param less_equal    whether <= is allowed
+     * @param name universe identifier
+     * @param type type label (usually {@code "Bool"})
+     * @param functions functions that operate over this universe
+     * @param equal {@code true} to allow equality (=)
+     * @param greater {@code true} to allow strict greater than (>)
+     * @param greater_equal {@code true} to allow greater or equal (>=)
+     * @param not_equal {@code true} to allow not equal (!=)
+     * @param less {@code true} to allow strict less than (<)
+     * @param less_equal {@code true} to allow less or equal (<=)
      */
-    public Universe(String name, String type, String function, int aridad, boolean equal, boolean greater, boolean greater_equal, boolean not_equal, boolean less, boolean less_equal) {
+    public Universe(String name, String type, ArrayList<Function> functions, boolean equal, boolean greater, boolean greater_equal, boolean not_equal, boolean less, boolean less_equal) {
         this.name = name;
         this.type = type;
-        this.function = function;
-        this.aridad = aridad;
+        this.functions = functions;
         this.equal = equal;
         this.greater = greater;
         this.greater_equal = greater_equal;
@@ -157,7 +148,9 @@ public class Universe implements Element {
         this.less_equal = less_equal;
     }
 
-    /** {@inheritDoc} */
+    /**
+     * {@inheritDoc}
+     */
     @Override
     public String getName() {
         return name;
@@ -204,17 +197,8 @@ public class Universe implements Element {
      *
      * @return the function name, or an empty string if none
      */
-    public String getFunction() {
-        return function;
-    }
-
-    /**
-     * Returns the arity of the associated function.
-     *
-     * @return the function arity
-     */
-    public int getAridad() {
-        return aridad;
+    public ArrayList<Function> getFunctions() {
+        return functions;
     }
 
     /**
@@ -283,19 +267,10 @@ public class Universe implements Element {
     /**
      * Updates the function associated with this universe.
      *
-     * @param function the new function name
+     * @param functions the new ArrayList of functions
      */
-    public void setFunction(String function) {
-        this.function = function;
-    }
-
-    /**
-     * Updates the arity of the function associated with this universe.
-     *
-     * @param aridad the new arity value
-     */
-    public void setAridad(int aridad) {
-        this.aridad = aridad;
+    public void setFunctions(ArrayList<Function> functions) {
+        this.functions = functions;
     }
 
     /**
@@ -361,8 +336,14 @@ public class Universe implements Element {
     @Override
     public String toString() {
         String function_aridad = "";
-        if (!function.isEmpty()) {
-            function_aridad = "[" + function + " (" + aridad + ")]";
+        if (!functions.isEmpty()) {
+            function_aridad = "[";
+            for (Function function : functions) {
+                function_aridad += function.toString() + " , ";
+            }
+            function_aridad = function_aridad.substring(0, function_aridad.length() - 3);
+            function_aridad += "]";
+
         }
         if (valueEnum != null) {
             return name + " [" + type + " (" + valueEnum + ")] " + function_aridad + " [" + getRelations() + "]";
@@ -379,7 +360,10 @@ public class Universe implements Element {
      * @return a semicolon-separated list of enabled relations
      */
     private String getRelations() {
-        String relations = "= ; ";
+        String relations = "";
+        if (isEqual()) {
+            relations += " = ; ";
+        }
         if (isGreater()) {
             relations += " > ; ";
         }
@@ -395,7 +379,10 @@ public class Universe implements Element {
         if (isLess_equal()) {
             relations += " <= ; ";
         }
-
-        return relations.substring(0, relations.length() - 3);
+        if (relations.length() > 2) {
+            return relations.substring(0, relations.length() - 2);
+        } else {
+            return "";
+        }
     }
 }
