@@ -46,7 +46,7 @@ Verify it exists:
 Run this from the project root directory:
 
 ```powershell
-jpackage --name SynT --input .\dist --main-jar SynT.jar --main-class GUI.Inicio --type msi --runtime-image "C:\Program Files\Java\jdk-20" --win-shortcut --icon ".\packaging\windows\SynT.ico" --app-version 1.2.0 --verbose
+jpackage --name SynT --input .\dist --main-jar SynT.jar --main-class GUI.Inicio --type msi --runtime-image "C:\Program Files\Java\jdk-20" --win-shortcut --icon ".\packaging\SynT.ico" --app-version 1.3.0 --verbose
 ```
 
 ### Parameters explained

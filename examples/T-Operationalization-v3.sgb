@@ -26,6 +26,8 @@
       "Scope": "IT teams"
     }
    ],
+   "Functions": [
+   ],
    "Universes": [
     {
       "Name": "Tty",
@@ -33,14 +35,15 @@
       "ValueEnum": "product-team, bridge-team, enabler-team, development-team, operation-team",
       "ValueMin": "1.7976931348623157E308",
       "ValueMax": "4.9E-324",
-      "Function": "",
-      "Aridad": "0",
       "Equal": "true",
       "Greater": "false",
       "Greater_equal": "false",
       "Not_equal": "false",
       "Less": "false",
-      "Less_equal": "false"
+      "Less_equal": "false",
+      "Functions": [
+
+      ]
     },
     {
       "Name": "Tau",
@@ -48,14 +51,15 @@
       "ValueEnum": "dependent, self-organization",
       "ValueMin": "1.7976931348623157E308",
       "ValueMax": "4.9E-324",
-      "Function": "",
-      "Aridad": "0",
       "Equal": "true",
       "Greater": "true",
       "Greater_equal": "false",
       "Not_equal": "false",
       "Less": "false",
-      "Less_equal": "false"
+      "Less_equal": "false",
+      "Functions": [
+
+      ]
     },
     {
       "Name": "Tag",
@@ -63,14 +67,15 @@
       "ValueEnum": "local-optimization, product-thinking",
       "ValueMin": "1.7976931348623157E308",
       "ValueMax": "4.9E-324",
-      "Function": "",
-      "Aridad": "0",
       "Equal": "true",
       "Greater": "true",
       "Greater_equal": "false",
       "Not_equal": "false",
       "Less": "false",
-      "Less_equal": "false"
+      "Less_equal": "false",
+      "Functions": [
+
+      ]
     },
     {
       "Name": "Tre",
@@ -78,14 +83,15 @@
       "ValueEnum": "null",
       "ValueMin": "0.0",
       "ValueMax": "10.0",
-      "Function": "",
-      "Aridad": "0",
       "Equal": "true",
       "Greater": "true",
       "Greater_equal": "false",
       "Not_equal": "false",
       "Less": "false",
-      "Less_equal": "false"
+      "Less_equal": "false",
+      "Functions": [
+
+      ]
     },
     {
       "Name": "Tbo",
@@ -93,14 +99,15 @@
       "ValueEnum": "null",
       "ValueMin": "1.7976931348623157E308",
       "ValueMax": "4.9E-324",
-      "Function": "",
-      "Aridad": "0",
       "Equal": "true",
       "Greater": "false",
       "Greater_equal": "false",
       "Not_equal": "false",
       "Less": "false",
-      "Less_equal": "false"
+      "Less_equal": "false",
+      "Functions": [
+
+      ]
     },
     {
       "Name": "Tma",
@@ -108,14 +115,15 @@
       "ValueEnum": "product-management, project-management",
       "ValueMin": "1.7976931348623157E308",
       "ValueMax": "4.9E-324",
-      "Function": "",
-      "Aridad": "0",
       "Equal": "true",
       "Greater": "false",
       "Greater_equal": "false",
       "Not_equal": "false",
       "Less": "false",
-      "Less_equal": "false"
+      "Less_equal": "false",
+      "Functions": [
+
+      ]
     },
     {
       "Name": "Tcm",
@@ -123,14 +131,15 @@
       "ValueEnum": "small-frequent, large-rare",
       "ValueMin": "1.7976931348623157E308",
       "ValueMax": "4.9E-324",
-      "Function": "",
-      "Aridad": "0",
       "Equal": "true",
       "Greater": "true",
       "Greater_equal": "false",
       "Not_equal": "false",
       "Less": "false",
-      "Less_equal": "false"
+      "Less_equal": "false",
+      "Functions": [
+
+      ]
     },
     {
       "Name": "Tpr",
@@ -138,14 +147,15 @@
       "ValueEnum": "customer-centric-action, end-to-end-responsibility, automate-everything",
       "ValueMin": "1.7976931348623157E308",
       "ValueMax": "4.9E-324",
-      "Function": "",
-      "Aridad": "0",
       "Equal": "true",
       "Greater": "false",
       "Greater_equal": "false",
       "Not_equal": "false",
       "Less": "false",
-      "Less_equal": "false"
+      "Less_equal": "false",
+      "Functions": [
+
+      ]
     },
     {
       "Name": "Tva",
@@ -153,14 +163,15 @@
       "ValueEnum": "communication, collaboration, transparency",
       "ValueMin": "1.7976931348623157E308",
       "ValueMax": "4.9E-324",
-      "Function": "",
-      "Aridad": "0",
       "Equal": "true",
       "Greater": "false",
       "Greater_equal": "false",
       "Not_equal": "false",
       "Less": "false",
-      "Less_equal": "false"
+      "Less_equal": "false",
+      "Functions": [
+
+      ]
     },
     {
       "Name": "Tbp",
@@ -168,14 +179,15 @@
       "ValueEnum": "Continuous-integration, continuous-testing, continuous-delivery, continuous-deployment, continuous-monitoring, continuous-improvement, infrastructure-as-cod",
       "ValueMin": "1.7976931348623157E308",
       "ValueMax": "4.9E-324",
-      "Function": "",
-      "Aridad": "0",
       "Equal": "true",
       "Greater": "false",
       "Greater_equal": "false",
       "Not_equal": "false",
       "Less": "false",
-      "Less_equal": "false"
+      "Less_equal": "false",
+      "Functions": [
+
+      ]
     },
     {
       "Name": "Tat",
@@ -183,14 +195,15 @@
       "ValueEnum": "automated-infrastructure-management-interface,  automated-application-life-cycle-management-interface",
       "ValueMin": "1.7976931348623157E308",
       "ValueMax": "4.9E-324",
-      "Function": "",
-      "Aridad": "0",
       "Equal": "true",
       "Greater": "false",
       "Greater_equal": "false",
       "Not_equal": "false",
       "Less": "false",
-      "Less_equal": "false"
+      "Less_equal": "false",
+      "Functions": [
+
+      ]
     },
     {
       "Name": "Tco",
@@ -198,14 +211,15 @@
       "ValueEnum": "(Daily/High), (Eventual/Low), (Daily/Low), (Eventual/High)",
       "ValueMin": "1.7976931348623157E308",
       "ValueMax": "4.9E-324",
-      "Function": "",
-      "Aridad": "0",
       "Equal": "true",
       "Greater": "true",
       "Greater_equal": "false",
       "Not_equal": "false",
       "Less": "false",
-      "Less_equal": "false"
+      "Less_equal": "false",
+      "Functions": [
+
+      ]
     }
    ],
    "Variables": [
@@ -354,150 +368,294 @@
       "UniverseName": "Tbo"
     }
   ],
-  "Implicaciones": [
+  "Implications": [
     {
-      "Literal1": "[Rs > 5]",
-      "Negado1": false,
-      "Literal2": "[Co > (Eventual/Low)]",
-      "Negado2": false
+      "Variable1": "Rs",
+      "Relation1": ">",
+      "Value1": "5",
+      "Negated1": "false",
+      "ValueFunction1": "true",
+      "Variable2": "Co",
+      "Relation2": ">",
+      "Value2": "(Eventual/Low)",
+      "Negated2": "false",
+      "ValueFunction2": "true"
     },
     {
-      "Literal1": "[Co > (Eventual/Low)]",
-      "Negado1": false,
-      "Literal2": "[So = True]",
-      "Negado2": true
+      "Variable1": "Co",
+      "Relation1": ">",
+      "Value1": "(Eventual/Low)",
+      "Negated1": "false",
+      "ValueFunction1": "true",
+      "Variable2": "So",
+      "Relation2": "=",
+      "Value2": "True",
+      "Negated2": "true",
+      "ValueFunction2": "true"
     },
     {
-      "Literal1": "[Co > (Eventual/Low)]",
-      "Negado1": false,
-      "Literal2": "[Aa = True]",
-      "Negado2": false
+      "Variable1": "Co",
+      "Relation1": ">",
+      "Value1": "(Eventual/Low)",
+      "Negated1": "false",
+      "ValueFunction1": "true",
+      "Variable2": "Aa",
+      "Relation2": "=",
+      "Value2": "True",
+      "Negated2": "false",
+      "ValueFunction2": "true"
     },
     {
-      "Literal1": "[Aa = True]",
-      "Negado1": false,
-      "Literal2": "[Co > (Eventual/Low)]",
-      "Negado2": false
+      "Variable1": "Aa",
+      "Relation1": "=",
+      "Value1": "True",
+      "Negated1": "false",
+      "ValueFunction1": "true",
+      "Variable2": "Co",
+      "Relation2": ">",
+      "Value2": "(Eventual/Low)",
+      "Negated2": "false",
+      "ValueFunction2": "true"
     },
     {
-      "Literal1": "[Ks > 5]",
-      "Negado1": false,
-      "Literal2": "[Co > (Eventual/Low)]",
-      "Negado2": false
+      "Variable1": "Ks",
+      "Relation1": ">",
+      "Value1": "5",
+      "Negated1": "false",
+      "ValueFunction1": "true",
+      "Variable2": "Co",
+      "Relation2": ">",
+      "Value2": "(Eventual/Low)",
+      "Negated2": "false",
+      "ValueFunction2": "true"
     },
     {
-      "Literal1": "[Cf = True]",
-      "Negado1": false,
-      "Literal2": "[Co > (Eventual/Low)]",
-      "Negado2": false
+      "Variable1": "Cf",
+      "Relation1": "=",
+      "Value1": "True",
+      "Negated1": "false",
+      "ValueFunction1": "true",
+      "Variable2": "Co",
+      "Relation2": ">",
+      "Value2": "(Eventual/Low)",
+      "Negated2": "false",
+      "ValueFunction2": "true"
     },
     {
-      "Literal1": "[Rd = True]",
-      "Negado1": false,
-      "Literal2": "[Co > (Eventual/Low)]",
-      "Negado2": true
+      "Variable1": "Rd",
+      "Relation1": "=",
+      "Value1": "True",
+      "Negated1": "false",
+      "ValueFunction1": "true",
+      "Variable2": "Co",
+      "Relation2": ">",
+      "Value2": "(Eventual/Low)",
+      "Negated2": "true",
+      "ValueFunction2": "true"
     },
     {
-      "Literal1": "[Mv = True]",
-      "Negado1": false,
-      "Literal2": "[Co > (Eventual/Low)]",
-      "Negado2": false
+      "Variable1": "Mv",
+      "Relation1": "=",
+      "Value1": "True",
+      "Negated1": "false",
+      "ValueFunction1": "true",
+      "Variable2": "Co",
+      "Relation2": ">",
+      "Value2": "(Eventual/Low)",
+      "Negated2": "false",
+      "ValueFunction2": "true"
     },
     {
-      "Literal1": "[Co > (Eventual/Low)]",
-      "Negado1": false,
-      "Literal2": "[Ag > local-optimization]",
-      "Negado2": false
+      "Variable1": "Co",
+      "Relation1": ">",
+      "Value1": "(Eventual/Low)",
+      "Negated1": "false",
+      "ValueFunction1": "true",
+      "Variable2": "Ag",
+      "Relation2": ">",
+      "Value2": "local-optimization",
+      "Negated2": "false",
+      "ValueFunction2": "true"
     },
     {
-      "Literal1": "[Cf = True]",
-      "Negado1": false,
-      "Literal2": "[Rs > 5]",
-      "Negado2": false
+      "Variable1": "Cf",
+      "Relation1": "=",
+      "Value1": "True",
+      "Negated1": "false",
+      "ValueFunction1": "true",
+      "Variable2": "Rs",
+      "Relation2": ">",
+      "Value2": "5",
+      "Negated2": "false",
+      "ValueFunction2": "true"
     },
     {
-      "Literal1": "[Rs > 5]",
-      "Negado1": false,
-      "Literal2": "[So = True]",
-      "Negado2": true
+      "Variable1": "Rs",
+      "Relation1": ">",
+      "Value1": "5",
+      "Negated1": "false",
+      "ValueFunction1": "true",
+      "Variable2": "So",
+      "Relation2": "=",
+      "Value2": "True",
+      "Negated2": "true",
+      "ValueFunction2": "true"
     },
     {
-      "Literal1": "[Tt = enabler-team]",
-      "Negado1": false,
-      "Literal2": "[Rs > 5]",
-      "Negado2": false
+      "Variable1": "Tt",
+      "Relation1": "=",
+      "Value1": "enabler-team",
+      "Negated1": "false",
+      "ValueFunction1": "true",
+      "Variable2": "Rs",
+      "Relation2": ">",
+      "Value2": "5",
+      "Negated2": "false",
+      "ValueFunction2": "true"
     },
     {
-      "Literal1": "[Tt = bridge-team]",
-      "Negado1": false,
-      "Literal2": "[So = True]",
-      "Negado2": false
+      "Variable1": "Tt",
+      "Relation1": "=",
+      "Value1": "bridge-team",
+      "Negated1": "false",
+      "ValueFunction1": "true",
+      "Variable2": "So",
+      "Relation2": "=",
+      "Value2": "True",
+      "Negated2": "false",
+      "ValueFunction2": "true"
     },
     {
-      "Literal1": "[Au = self-organization]",
-      "Negado1": false,
-      "Literal2": "[Rs > 5]",
-      "Negado2": false
+      "Variable1": "Au",
+      "Relation1": "=",
+      "Value1": "self-organization",
+      "Negated1": "false",
+      "ValueFunction1": "true",
+      "Variable2": "Rs",
+      "Relation2": ">",
+      "Value2": "5",
+      "Negated2": "false",
+      "ValueFunction2": "true"
     },
     {
-      "Literal1": "[Rs > 5]",
-      "Negado1": false,
-      "Literal2": "[Cm = True]",
-      "Negado2": false
+      "Variable1": "Rs",
+      "Relation1": ">",
+      "Value1": "5",
+      "Negated1": "false",
+      "ValueFunction1": "true",
+      "Variable2": "Cm",
+      "Relation2": "=",
+      "Value2": "True",
+      "Negated2": "false",
+      "ValueFunction2": "true"
     },
     {
-      "Literal1": "[Rs > 5]",
-      "Negado1": true,
-      "Literal2": "[Tw = True]",
-      "Negado2": false
+      "Variable1": "Rs",
+      "Relation1": ">",
+      "Value1": "5",
+      "Negated1": "true",
+      "ValueFunction1": "true",
+      "Variable2": "Tw",
+      "Relation2": "=",
+      "Value2": "True",
+      "Negated2": "false",
+      "ValueFunction2": "true"
     },
     {
-      "Literal1": "[Tw = True]",
-      "Negado1": false,
-      "Literal2": "[Rs > 5]",
-      "Negado2": true
+      "Variable1": "Tw",
+      "Relation1": "=",
+      "Value1": "True",
+      "Negated1": "false",
+      "ValueFunction1": "true",
+      "Variable2": "Rs",
+      "Relation2": ">",
+      "Value2": "5",
+      "Negated2": "true",
+      "ValueFunction2": "true"
     },
     {
-      "Literal1": "[Ai = True]",
-      "Negado1": false,
-      "Literal2": "[Rs > 5]",
-      "Negado2": false
+      "Variable1": "Ai",
+      "Relation1": "=",
+      "Value1": "True",
+      "Negated1": "false",
+      "ValueFunction1": "true",
+      "Variable2": "Rs",
+      "Relation2": ">",
+      "Value2": "5",
+      "Negated2": "false",
+      "ValueFunction2": "true"
     },
     {
-      "Literal1": "[Aa = True]",
-      "Negado1": false,
-      "Literal2": "[Rs > 5]",
-      "Negado2": false
+      "Variable1": "Aa",
+      "Relation1": "=",
+      "Value1": "True",
+      "Negated1": "false",
+      "ValueFunction1": "true",
+      "Variable2": "Rs",
+      "Relation2": ">",
+      "Value2": "5",
+      "Negated2": "false",
+      "ValueFunction2": "true"
     },
     {
-      "Literal1": "[Cf = True]",
-      "Negado1": false,
-      "Literal2": "[Ks > 5]",
-      "Negado2": false
+      "Variable1": "Cf",
+      "Relation1": "=",
+      "Value1": "True",
+      "Negated1": "false",
+      "ValueFunction1": "true",
+      "Variable2": "Ks",
+      "Relation2": ">",
+      "Value2": "5",
+      "Negated2": "false",
+      "ValueFunction2": "true"
     },
     {
-      "Literal1": "[Tt = enabler-team]",
-      "Negado1": false,
-      "Literal2": "[Cf = True]",
-      "Negado2": false
+      "Variable1": "Tt",
+      "Relation1": "=",
+      "Value1": "enabler-team",
+      "Negated1": "false",
+      "ValueFunction1": "true",
+      "Variable2": "Cf",
+      "Relation2": "=",
+      "Value2": "True",
+      "Negated2": "false",
+      "ValueFunction2": "true"
     },
     {
-      "Literal1": "[Cf = True]",
-      "Negado1": false,
-      "Literal2": "[So = True]",
-      "Negado2": true
+      "Variable1": "Cf",
+      "Relation1": "=",
+      "Value1": "True",
+      "Negated1": "false",
+      "ValueFunction1": "true",
+      "Variable2": "So",
+      "Relation2": "=",
+      "Value2": "True",
+      "Negated2": "true",
+      "ValueFunction2": "true"
     },
     {
-      "Literal1": "[Cf = True]",
-      "Negado1": false,
-      "Literal2": "[Aa = True]",
-      "Negado2": false
+      "Variable1": "Cf",
+      "Relation1": "=",
+      "Value1": "True",
+      "Negated1": "false",
+      "ValueFunction1": "true",
+      "Variable2": "Aa",
+      "Relation2": "=",
+      "Value2": "True",
+      "Negated2": "false",
+      "ValueFunction2": "true"
     },
     {
-      "Literal1": "[So = True]",
-      "Negado1": false,
-      "Literal2": "[Aa = True]",
-      "Negado2": true
+      "Variable1": "So",
+      "Relation1": "=",
+      "Value1": "True",
+      "Negated1": "false",
+      "ValueFunction1": "true",
+      "Variable2": "Aa",
+      "Relation2": "=",
+      "Value2": "True",
+      "Negated2": "true",
+      "ValueFunction2": "true"
     }
   ]
 }
