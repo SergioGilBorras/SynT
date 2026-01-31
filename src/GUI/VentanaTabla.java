@@ -16,7 +16,6 @@ import javax.swing.table.TableColumn;
  * Click nbfs://nbhost/SystemFileSystem/Templates/Licenses/license-default.txt to change this license
  * Click nbfs://nbhost/SystemFileSystem/Templates/GUIForms/JFrame.java to edit this template
  */
-
 /**
  * Swing window that displays a matrix-based model as a table.
  * <p>
@@ -51,12 +50,12 @@ public class VentanaTabla extends javax.swing.JFrame {
     /**
      * Creates a new table window for the given matrix and node list.
      * <p>
-     * The constructor builds the table model, initializes the UI components
-     * and configures column widths, cell renderers and selection behavior.
+     * The constructor builds the table model, initializes the UI components and
+     * configures column widths, cell renderers and selection behavior.
      * </p>
      *
      * @param matriz the matrix representing the model
-     * @param nodos  the list of node labels, one per row/column in the matrix
+     * @param nodos the list of node labels, one per row/column in the matrix
      */
     public VentanaTabla(int[][] matriz, List<String> nodos) {
         this.matriz = matriz;
@@ -148,14 +147,18 @@ public class VentanaTabla extends javax.swing.JFrame {
      * </p>
      */
     private void loadTabla() {
-        int rows = matriz.length;
-        int cols = matriz[0].length + 1;
+        int rows = nodos.size();//matriz.length;
+        int cols = nodos.size() + 1;//matriz[0].length + 1;
         String[][] tableData = new String[rows][cols];
-
+        //System.out.println("nodos.size() == " + nodos.size());
+        //System.out.println("matriz.length == " + matriz.length + " x " + matriz[0].length);
         // Fill first column with node labels and the rest with matrix values
         for (int i = 0; i < rows; i++) {
-            tableData[i][0] = nodos.get(i);
-            for (int j = 0; j < matriz[i].length; j++) {
+            if (i < nodos.size()) {
+                tableData[i][0] = nodos.get(i);
+            }
+            //System.out.println(tableData[i][0]);
+            for (int j = 0; j < cols-1; j++) { //matriz[i].length
                 tableData[i][j + 1] = String.valueOf(matriz[i][j]);
             }
         }
@@ -164,10 +167,13 @@ public class VentanaTabla extends javax.swing.JFrame {
         String[] header = new String[cols];
         header[0] = "";
         for (int i = 1; i < cols; i++) {
-            header[i] = nodos.get(i - 1);
-            if (anchoHeader < header[i].length()) {
-                anchoHeader = header[i].length();
-                maxAncho = header[i];
+            if (i - 1 < nodos.size()) {
+                header[i] = nodos.get(i - 1);
+
+                if (anchoHeader < header[i].length()) {
+                    anchoHeader = header[i].length();
+                    maxAncho = header[i];
+                }
             }
         }
         tablaModel = new DefaultTableModel(tableData, header);
