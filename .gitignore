@@ -59,6 +59,7 @@ releases/
 release/
 output/
 dist_installer/
+src/old_clases/
 
 # Installers/artifacts
 *.msi
