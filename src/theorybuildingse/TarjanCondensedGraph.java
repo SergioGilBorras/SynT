@@ -6,20 +6,42 @@ package theorybuildingse;
 
 import java.util.*;
 
-/*
-Algoritmo de Tarjan para encontrar los componentes fuertemente conexos (SCCs) de 
-Grafos dirijidos.
-
-Complejidad O(V+E)
+/**
+ * Tarjan's algorithm implementation to compute strongly connected components
+ * (SCCs) of a directed graph.
+ * <p>
+ * This class can be built either from an adjacency matrix ({@code int[][]}) or
+ * by specifying a vertex count and adding edges.
+ * </p>
+ * <p>
+ * Time complexity: O(V + E).
+ * </p>
  */
-class TarjanCondensedGraph {
+public class TarjanCondensedGraph {
 
+    /** Number of vertices. */
     private final int V;
+
+    /** Adjacency list representation. */
     private final List<List<Integer>> adjList;
+
+    /** Monotonic index counter used by Tarjan. */
     private int index = 0;
+
+    /** Collected SCCs as sets of vertex indices. */
     private final ArrayList<Set<Integer>> listSetNodes = new ArrayList<>();
+
+    /** Internal set instance used while extracting a single SCC. */
     private Set<Integer> nodos;
 
+    /**
+     * Builds a graph from an adjacency matrix.
+     * <p>
+     * Any entry {@code != 0} is treated as an edge.
+     * </p>
+     *
+     * @param matrizAdj adjacency matrix (must be square)
+     */
     public TarjanCondensedGraph(int[][] matrizAdj) {
         V = matrizAdj.length;
         adjList = new ArrayList<>();
@@ -34,6 +56,11 @@ class TarjanCondensedGraph {
         }
     }
 
+    /**
+     * Builds an empty graph with {@code v} vertices.
+     *
+     * @param v vertex count
+     */
     public TarjanCondensedGraph(int v) {
         V = v;
         adjList = new ArrayList<>();
@@ -42,17 +69,31 @@ class TarjanCondensedGraph {
         }
     }
 
+    /**
+     * Adds a directed edge {@code u -> v}.
+     *
+     * @param u source vertex
+     * @param v target vertex
+     */
     public final void addEdge(int u, int v) {
         adjList.get(u).add(v);
     }
 
-    // Tarjan's DFS
+    /**
+     * Tarjan DFS routine.
+     *
+     * @param v current vertex
+     * @param indices discovery indices (Tarjan)
+     * @param lowLink low-link values (Tarjan)
+     * @param stack DFS stack
+     * @param inStack membership flag for {@code stack}
+     */
     private void tarjanDFS(int v, int[] indices, int[] lowLink, Stack<Integer> stack, boolean[] inStack) {
         indices[v] = lowLink[v] = index++;
         stack.push(v);
         inStack[v] = true;
 
-        // Explorar los vecinos
+        // Explore neighbors
         for (int neighbor : adjList.get(v)) {
             if (indices[neighbor] == -1) {
                 tarjanDFS(neighbor, indices, lowLink, stack, inStack);
@@ -62,7 +103,7 @@ class TarjanCondensedGraph {
             }
         }
 
-        // Identificar SCCs
+        // Root of an SCC
         if (indices[v] == lowLink[v]) {
             nodos = new LinkedHashSet<>();
             //System.out.print("SCC: ");
@@ -78,7 +119,15 @@ class TarjanCondensedGraph {
         }
     }
 
-    // Función principal para encontrar los SCCs con Tarjan
+    /**
+     * Computes all SCCs of the current graph.
+     * <p>
+     * Note: the returned list is backed by internal state; repeated calls will
+     * append SCCs again in the current implementation.
+     * </p>
+     *
+     * @return list of SCCs, each SCC as a set of vertex indices
+     */
     public ArrayList<Set<Integer>> findSCCs() {
         int[] indices = new int[V];
         int[] lowLink = new int[V];
@@ -95,6 +144,12 @@ class TarjanCondensedGraph {
         return listSetNodes;
     }
 
+    /**
+     * Prints the currently collected SCCs to stdout.
+     * <p>
+     * Debug helper.
+     * </p>
+     */
     public void printListSetNodes() {
         System.out.println("-- Print SCC nodes -- ");
         for (Set<Integer> listSetNode : listSetNodes) {
@@ -106,6 +161,11 @@ class TarjanCondensedGraph {
         }
     }
 
+    /**
+     * Simple manual demo.
+     *
+     * @param args ignored
+     */
     public static void main(String[] args) {
         TarjanCondensedGraph g = new TarjanCondensedGraph(5);
         g.addEdge(0, 2);

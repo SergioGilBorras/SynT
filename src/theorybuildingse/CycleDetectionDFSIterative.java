@@ -5,15 +5,28 @@
 package theorybuildingse;
 
 import java.util.Stack;
-/*
-Detección de ciclos mediante DFS (Depth First Search) Iterativo
-Complejidad:
 
-    Tiempo: O(V+E), ya que cada nodo y arista se procesan exactamente una vez.
-    Espacio: O(3V), debido a la pila explícita y los arrays auxiliares visited e inStack
-*/
+/**
+ * Detects directed cycles in a graph represented as an adjacency matrix using an
+ * iterative depth-first search (DFS).
+ * <p>
+ * Any entry {@code > 0} in the matrix is treated as an edge.
+ * </p>
+ * <p>
+ * Time complexity: O(V + E) (each node/edge is processed once).<br>
+ * Space complexity: O(V) (explicit stack + visited/inStack bookkeeping).
+ * </p>
+ */
 public class CycleDetectionDFSIterative {
 
+    /**
+     * Simple manual demo.
+     * <p>
+     * Not used by the application at runtime.
+     * </p>
+     *
+     * @param args ignored
+     */
     public static void main(String[] args) {
         // Ejemplo de matriz de adyacencia
         int[][] adjacencyMatrix = {
@@ -27,8 +40,27 @@ public class CycleDetectionDFSIterative {
         System.out.println("¿El grafo tiene ciclos? " + hasCycle);
     }
 
+    /**
+     * Returns whether the directed graph described by {@code matrix} contains at
+     * least one directed cycle.
+     *
+     * @param matrix adjacency matrix (must be square); an entry {@code > 0}
+     *               represents an edge
+     * @return {@code true} if a directed cycle exists; {@code false} otherwise
+     * @throws IllegalArgumentException if {@code matrix} is {@code null} or not
+     *                                  square
+     */
     public static boolean hasCycle(int[][] matrix) {
+        if (matrix == null) {
+            throw new IllegalArgumentException("matrix cannot be null");
+        }
         int n = matrix.length;
+        for (int i = 0; i < n; i++) {
+            if (matrix[i] == null || matrix[i].length != n) {
+                throw new IllegalArgumentException("matrix must be square");
+            }
+        }
+
         boolean[] visited = new boolean[n];
         boolean[] inStack = new boolean[n];
 
@@ -43,6 +75,15 @@ public class CycleDetectionDFSIterative {
         return false;
     }
 
+    /**
+     * Iterative DFS starting at {@code startNode}.
+     *
+     * @param matrix adjacency matrix
+     * @param startNode start node
+     * @param visited global visited array
+     * @param inStack global recursion-stack emulation array
+     * @return {@code true} if a back-edge is found (cycle); {@code false} otherwise
+     */
     private static boolean dfsIterative(int[][] matrix, int startNode, boolean[] visited, boolean[] inStack) {
         Stack<Integer> stack = new Stack<>();
         stack.push(startNode);
@@ -60,7 +101,7 @@ public class CycleDetectionDFSIterative {
 
             // Revisar todos los vecinos del nodo
             for (int neighbor = 0; neighbor < matrix[node].length; neighbor++) {
-                if (matrix[node][neighbor] == 1) { // Existe una conexión
+                if (matrix[node][neighbor] > 0) { // Existe una conexión
                     if (!visited[neighbor]) {
                         // Si hay un vecino no visitado, agrégalo al stack
                         stack.push(neighbor);

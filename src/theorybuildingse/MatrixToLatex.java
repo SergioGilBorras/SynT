@@ -11,7 +11,7 @@ package theorybuildingse;
 public class MatrixToLatex {
     public static String toLatex(int[][] matrix) {
         StringBuilder latex = new StringBuilder();
-        latex.append("\n\n$$\\tiny\nA_{\\mathcal{G}_T} = \\begin{bmatrix}\n");
+        latex.append("$$\\tiny\nA_{\\mathcal{G}_T} = \\begin{bmatrix}\n");
         for (int[] matrix1 : matrix) {
             for (int j = 0; j < matrix1.length; j++) {
                 latex.append(matrix1[j]);
@@ -21,7 +21,7 @@ public class MatrixToLatex {
             }
             latex.append(" \\\\\n");
         }
-        latex.append("\\end{bmatrix}\n$$\n");
+        latex.append("\\end{bmatrix}\n$$");
         return latex.toString();
     }
 
