@@ -288,12 +288,25 @@ Use this tab to generate and visualize the model.
 
 SynT enables/disables options depending on whether cycles exist in the model.
 
+**Expanded Cycles implementation (V1/V2)**
+
+When the model contains cycles and **Expanded Cycles** is available, you can select the cycle expansion/restoration version (e.g. **V1** or **V2**) using the combo box shown next to the **Expanded Cycles** label. Changing this selection resets the cached matrices and regenerates the model so the selected algorithm is applied.
+
 **Format** (left group)
 
 - **Table**: open a table view of the matrix.
 - **LaTeX**: append a LaTeX representation to the text area.
 - **Graph**: open a graph view.
 - **Excel (CSV)**: export a CSV file.
+- **Txt**: export a text file listing the implications of the selected model stage.
+
+**Txt export details**
+
+When exporting as **Txt**:
+
+- The file includes an "--- Implications ---" section listing the implications present in the selected matrix.
+- When the selected stage is **Expanded Cycles**, it also includes an "--- Delete implications ---" section listing implications that are considered redundant (i.e., present in the original implications list but not in the generated one).
+- For each redundant implication, SynT attempts to show a shortest path that justifies why it is redundant, formatted as `A --> B --> C`.
 
 **Buttons**
 
