@@ -4,6 +4,20 @@
  */
 package GUI;
 
+import GUI.Componets.CheckComboItem;
+import GUI.Componets.CheckComboRenderer;
+import models.*;
+import org.graphstream.ui.view.Viewer;
+import org.json.JSONArray;
+import org.json.JSONException;
+import org.json.JSONObject;
+import theorybuildingse.dibujaGrafos;
+
+import javax.swing.*;
+import javax.swing.event.PopupMenuEvent;
+import javax.swing.event.PopupMenuListener;
+import javax.swing.filechooser.FileNameExtensionFilter;
+import javax.swing.plaf.basic.ComboPopup;
 import java.awt.*;
 import java.awt.event.MouseAdapter;
 import java.awt.event.MouseEvent;
@@ -14,26 +28,15 @@ import java.io.FileWriter;
 import java.io.IOException;
 import java.nio.file.Files;
 import java.nio.file.Paths;
+import java.util.ArrayList;
 import java.util.List;
 import java.util.Objects;
 import java.util.concurrent.atomic.AtomicBoolean;
-import javax.swing.*;
-import javax.swing.event.PopupMenuEvent;
-import javax.swing.event.PopupMenuListener;
-import javax.swing.filechooser.FileNameExtensionFilter;
-import javax.swing.plaf.basic.ComboPopup;
-
-import models.*;
-import org.graphstream.ui.view.Viewer;
-import org.json.JSONArray;
-import org.json.JSONException;
-import org.json.JSONObject;
-import static theorybuildingse.MatrixToLatex.toLatex;
-import theorybuildingse.dibujaGrafos;
-import GUI.Componets.CheckComboItem;
-import GUI.Componets.CheckComboRenderer;
-import java.util.ArrayList;
 import java.util.concurrent.atomic.AtomicReference;
+
+import static GUI.utils.caminoMinimo;
+import static GUI.utils.dividirAristaEnNodos;
+import static theorybuildingse.MatrixToLatex.toLatex;
 
 /**
  * Main Swing frame for SynT, a tool for automating the theory synthesis
@@ -98,6 +101,17 @@ public class Inicio extends javax.swing.JFrame {
      * cycle reduction).
      */
     DefaultListModel<String> listModelImplicacionesListCR = new DefaultListModel<>();
+
+    /**
+     * Human-readable list of implications used in Generation Tab).
+     */
+    DefaultListModel<String> listModelGeneration = new DefaultListModel<>();
+
+    /**
+     * Human-readable list of implications in contrapositive form used in
+     * Generation Tab).
+     */
+    DefaultListModel<String> listModelGenerationCR = new DefaultListModel<>();
 
     /**
      * Combo box model containing all variable aliases used as literal 1.
@@ -192,6 +206,113 @@ public class Inicio extends javax.swing.JFrame {
         sincronizarScrollImplicaciones();
         sincronizarJListImplicaciones();
         initComboBoxCheckItem();
+    }
+
+    /**
+     * Checks whether a {@link DefaultListModel} contains a given string.
+     * <p>
+     * {@link DefaultListModel} does not provide a {@code contains(...)} method,
+     * so we scan it linearly.
+     * </p>
+     *
+     * @param model the list model to scan
+     * @param valor the value to search for
+     * @return {@code true} if the model contains {@code valor}; {@code false} otherwise
+     */
+    private static boolean defaultListModelContain(DefaultListModel<String> model, String valor) {
+        for (int i = 0; i < model.size(); i++) {
+            if (model.get(i).equals(valor)) {
+                //System.out.println("ENTRE::::::::");
+                return true;
+            }
+        }
+        return false;
+    }
+
+    /**
+     * Concatenates two {@link DefaultListModel} instances into a new model.
+     * <p>
+     * The returned model preserves the order of the original elements:
+     * all elements from {@code a} first, followed by all elements from {@code b}.
+     * </p>
+     *
+     * @param a first list model
+     * @param b second list model
+     * @return a new {@link DefaultListModel} containing {@code a} + {@code b}
+     */
+    public static DefaultListModel<String> defaultListModelSum(
+            DefaultListModel<String> a,
+            DefaultListModel<String> b) {
+
+        DefaultListModel<String> resultado = new DefaultListModel<>();
+
+        for (int i = 0; i < a.size(); i++) {
+            resultado.addElement(a.get(i));
+        }
+
+        for (int i = 0; i < b.size(); i++) {
+            resultado.addElement(b.get(i));
+        }
+
+        return resultado;
+    }
+
+    /**
+     * Sorts a {@link DefaultComboBoxModel} of strings in-place (case-insensitive).
+     * <p>
+     * The model is copied into a temporary list, sorted using
+     * {@link String#compareToIgnoreCase(String)}, then the combo model is cleared
+     * and repopulated with the sorted items.
+     * </p>
+     *
+     * @param CombolistModel combo box model to sort
+     */
+    public static void ordenarDefaultComboBoxModel(DefaultComboBoxModel<String> CombolistModel) {
+
+        List<String> lista = new ArrayList<>();
+        for (int i = 0; i < CombolistModel.getSize(); i++) {
+            lista.add(CombolistModel.getElementAt(i));
+        }
+
+        lista.sort(String::compareToIgnoreCase);
+
+        CombolistModel.removeAllElements();
+        lista.forEach(CombolistModel::addElement);
+    }
+
+    /**
+     * Application entry point.
+     * <p>
+     * Sets the Nimbus look and feel when available and shows the main SynT
+     * frame on the Event Dispatch Thread.
+     * </p>
+     *
+     * @param args command line arguments (not used)
+     */
+    public static void main(String args[]) {
+        /* Set the Nimbus look and feel */
+        //<editor-fold defaultstate="collapsed" desc=" Look and feel setting code (optional) ">
+        /* If Nimbus (introduced in Java SE 6) is not available, stay with the default look and feel.
+         * For details see http://download.oracle.com/javase/tutorial/uiswing/lookandfeel/plaf.html
+         */
+        try {
+            for (javax.swing.UIManager.LookAndFeelInfo info : javax.swing.UIManager.getInstalledLookAndFeels()) {
+                if ("Nimbus".equals(info.getName())) {
+                    javax.swing.UIManager.setLookAndFeel(info.getClassName());
+                    break;
+
+                }
+            }
+        } catch (ClassNotFoundException | InstantiationException | IllegalAccessException
+                | UnsupportedLookAndFeelException ex) {
+            java.util.logging.Logger.getLogger(Inicio.class
+                    .getName()).log(java.util.logging.Level.SEVERE, null, ex);
+
+        }
+        //</editor-fold>
+
+        /* Create and display the form */
+        java.awt.EventQueue.invokeLater(() -> new Inicio().setVisible(true));
     }
 
     /**
@@ -338,6 +459,7 @@ public class Inicio extends javax.swing.JFrame {
         jRadioButton11 = new javax.swing.JRadioButton();
         jRadioButton12 = new javax.swing.JRadioButton();
         jRadioButton13 = new javax.swing.JRadioButton();
+        jCheckBox9 = new javax.swing.JCheckBox();
         jPanel3 = new javax.swing.JPanel();
         jRadioButton1 = new javax.swing.JRadioButton();
         jRadioButton3 = new javax.swing.JRadioButton();
@@ -354,6 +476,13 @@ public class Inicio extends javax.swing.JFrame {
         jTextArea1 = new javax.swing.JTextArea();
         jButton11 = new javax.swing.JButton();
         jButton12 = new javax.swing.JButton();
+        jScrollPane9 = new javax.swing.JScrollPane();
+        jList7 = new javax.swing.JList<>();
+        jScrollPane10 = new javax.swing.JScrollPane();
+        jList8 = new javax.swing.JList<>();
+        jRadioButton14 = new javax.swing.JRadioButton();
+        jComboBox9 = new javax.swing.JComboBox<>();
+        jLabel7 = new javax.swing.JLabel();
         jPanel10 = new javax.swing.JPanel();
         jScrollPane6 = new javax.swing.JScrollPane();
         jTextArea2 = new javax.swing.JTextArea();
@@ -1280,6 +1409,14 @@ public class Inicio extends javax.swing.JFrame {
             }
         });
 
+        jCheckBox9.setSelected(true);
+        jCheckBox9.setText("Display Contrapositives");
+        jCheckBox9.addActionListener(new java.awt.event.ActionListener() {
+            public void actionPerformed(java.awt.event.ActionEvent evt) {
+                jCheckBox9ActionPerformed(evt);
+            }
+        });
+
         javax.swing.GroupLayout jPanel2Layout = new javax.swing.GroupLayout(jPanel2);
         jPanel2.setLayout(jPanel2Layout);
         jPanel2Layout.setHorizontalGroup(
@@ -1327,21 +1464,29 @@ public class Inicio extends javax.swing.JFrame {
                                 .addComponent(jLabel8))
                             .addComponent(jRadioButton12)
                             .addComponent(jRadioButton13))))
-                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.UNRELATED, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
-                .addGroup(jPanel2Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING, false)
-                    .addComponent(jScrollPane2, javax.swing.GroupLayout.DEFAULT_SIZE, 485, Short.MAX_VALUE)
-                    .addComponent(jScrollPane7))
-                .addGap(108, 108, 108))
+                .addGroup(jPanel2Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
+                    .addGroup(jPanel2Layout.createSequentialGroup()
+                        .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.UNRELATED, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
+                        .addGroup(jPanel2Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING, false)
+                            .addComponent(jScrollPane2, javax.swing.GroupLayout.PREFERRED_SIZE, 485, javax.swing.GroupLayout.PREFERRED_SIZE)
+                            .addComponent(jScrollPane7))
+                        .addGap(108, 108, 108))
+                    .addGroup(jPanel2Layout.createSequentialGroup()
+                        .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.UNRELATED)
+                        .addComponent(jCheckBox9)
+                        .addContainerGap(javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE))))
         );
         jPanel2Layout.setVerticalGroup(
             jPanel2Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
             .addGroup(javax.swing.GroupLayout.Alignment.TRAILING, jPanel2Layout.createSequentialGroup()
                 .addGroup(jPanel2Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.TRAILING)
                     .addGroup(jPanel2Layout.createSequentialGroup()
-                        .addContainerGap()
-                        .addComponent(jScrollPane2, javax.swing.GroupLayout.PREFERRED_SIZE, 236, javax.swing.GroupLayout.PREFERRED_SIZE)
-                        .addGap(18, 18, 18)
-                        .addComponent(jScrollPane7, javax.swing.GroupLayout.PREFERRED_SIZE, 237, javax.swing.GroupLayout.PREFERRED_SIZE))
+                        .addGap(7, 7, 7)
+                        .addComponent(jScrollPane2, javax.swing.GroupLayout.DEFAULT_SIZE, 224, Short.MAX_VALUE)
+                        .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.UNRELATED)
+                        .addComponent(jCheckBox9)
+                        .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.UNRELATED)
+                        .addComponent(jScrollPane7, javax.swing.GroupLayout.PREFERRED_SIZE, 223, javax.swing.GroupLayout.PREFERRED_SIZE))
                     .addGroup(jPanel2Layout.createSequentialGroup()
                         .addGroup(jPanel2Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING, false)
                             .addGroup(jPanel2Layout.createSequentialGroup()
@@ -1388,7 +1533,7 @@ public class Inicio extends javax.swing.JFrame {
                                 .addComponent(jSeparator1, javax.swing.GroupLayout.PREFERRED_SIZE, 300, javax.swing.GroupLayout.PREFERRED_SIZE)))
                         .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
                         .addComponent(jSeparator2, javax.swing.GroupLayout.PREFERRED_SIZE, 3, javax.swing.GroupLayout.PREFERRED_SIZE)
-                        .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED, 50, Short.MAX_VALUE)
+                        .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
                         .addGroup(jPanel2Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
                             .addComponent(jButton6)
                             .addComponent(jButton7)
@@ -1459,6 +1604,26 @@ public class Inicio extends javax.swing.JFrame {
             }
         });
 
+        jList7.setModel(listModelGeneration);
+        jList7.setSelectionMode(javax.swing.ListSelectionModel.SINGLE_SELECTION);
+        jScrollPane9.setViewportView(jList7);
+
+        jList8.setModel(listModelGenerationCR);
+        jList8.setSelectionMode(javax.swing.ListSelectionModel.SINGLE_SELECTION);
+        jScrollPane10.setViewportView(jList8);
+
+        buttonGroup2.add(jRadioButton14);
+        jRadioButton14.setText("Txt");
+
+        jComboBox9.setModel(new javax.swing.DefaultComboBoxModel<>(new String[] { "V1", "V2" }));
+        jComboBox9.addActionListener(new java.awt.event.ActionListener() {
+            public void actionPerformed(java.awt.event.ActionEvent evt) {
+                jComboBox9ActionPerformed(evt);
+            }
+        });
+
+        jLabel7.setText("Expanded Cycles");
+
         javax.swing.GroupLayout jPanel3Layout = new javax.swing.GroupLayout(jPanel3);
         jPanel3.setLayout(jPanel3Layout);
         jPanel3Layout.setHorizontalGroup(
@@ -1466,13 +1631,6 @@ public class Inicio extends javax.swing.JFrame {
             .addGroup(jPanel3Layout.createSequentialGroup()
                 .addGap(17, 17, 17)
                 .addGroup(jPanel3Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-                    .addComponent(jRadioButton4)
-                    .addComponent(jRadioButton3)
-                    .addComponent(jRadioButton2)
-                    .addGroup(jPanel3Layout.createSequentialGroup()
-                        .addGap(11, 11, 11)
-                        .addComponent(jLabel13))
-                    .addComponent(jRadioButton9)
                     .addComponent(jRadioButton8)
                     .addGroup(jPanel3Layout.createSequentialGroup()
                         .addGap(5, 5, 5)
@@ -1481,32 +1639,57 @@ public class Inicio extends javax.swing.JFrame {
                     .addComponent(jRadioButton5)
                     .addComponent(jRadioButton6)
                     .addGroup(jPanel3Layout.createSequentialGroup()
+                        .addGap(11, 11, 11)
+                        .addComponent(jLabel13))
+                    .addComponent(jRadioButton9)
+                    .addComponent(jRadioButton1)
+                    .addComponent(jRadioButton4)
+                    .addComponent(jRadioButton3)
+                    .addComponent(jRadioButton2)
+                    .addGroup(jPanel3Layout.createSequentialGroup()
                         .addComponent(jButton11, javax.swing.GroupLayout.PREFERRED_SIZE, 89, javax.swing.GroupLayout.PREFERRED_SIZE)
                         .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
                         .addComponent(jButton12, javax.swing.GroupLayout.PREFERRED_SIZE, 89, javax.swing.GroupLayout.PREFERRED_SIZE))
-                    .addComponent(jRadioButton1))
-                .addGap(18, 18, 18)
-                .addComponent(jScrollPane3, javax.swing.GroupLayout.DEFAULT_SIZE, 578, Short.MAX_VALUE)
+                    .addComponent(jRadioButton14)
+                    .addGroup(jPanel3Layout.createSequentialGroup()
+                        .addComponent(jLabel7)
+                        .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
+                        .addComponent(jComboBox9, javax.swing.GroupLayout.PREFERRED_SIZE, 54, javax.swing.GroupLayout.PREFERRED_SIZE)))
+                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED, 32, Short.MAX_VALUE)
+                .addGroup(jPanel3Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING, false)
+                    .addComponent(jScrollPane9, javax.swing.GroupLayout.DEFAULT_SIZE, 564, Short.MAX_VALUE)
+                    .addComponent(jScrollPane10)
+                    .addComponent(jScrollPane3))
                 .addContainerGap())
         );
         jPanel3Layout.setVerticalGroup(
             jPanel3Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
             .addGroup(jPanel3Layout.createSequentialGroup()
-                .addGroup(jPanel3Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.TRAILING)
+                .addContainerGap()
+                .addGroup(jPanel3Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
                     .addGroup(jPanel3Layout.createSequentialGroup()
-                        .addContainerGap()
-                        .addComponent(jLabel12)
-                        .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.UNRELATED)
-                        .addComponent(jRadioButton5)
+                        .addComponent(jScrollPane3, javax.swing.GroupLayout.PREFERRED_SIZE, 101, javax.swing.GroupLayout.PREFERRED_SIZE)
                         .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
-                        .addComponent(jRadioButton6)
-                        .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
-                        .addComponent(jRadioButton7)
-                        .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
-                        .addComponent(jRadioButton8)
-                        .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
-                        .addComponent(jRadioButton9)
-                        .addGap(164, 164, 164)
+                        .addComponent(jScrollPane9, javax.swing.GroupLayout.PREFERRED_SIZE, 192, javax.swing.GroupLayout.PREFERRED_SIZE))
+                    .addGroup(jPanel3Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.TRAILING)
+                        .addComponent(jComboBox9, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
+                        .addGroup(jPanel3Layout.createSequentialGroup()
+                            .addComponent(jLabel12)
+                            .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.UNRELATED)
+                            .addComponent(jRadioButton5)
+                            .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
+                            .addComponent(jRadioButton6)
+                            .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
+                            .addComponent(jRadioButton7)
+                            .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
+                            .addComponent(jRadioButton8)
+                            .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
+                            .addComponent(jRadioButton9)
+                            .addGap(59, 59, 59)
+                            .addComponent(jLabel7))))
+                .addGap(12, 12, 12)
+                .addGroup(jPanel3Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
+                    .addGroup(jPanel3Layout.createSequentialGroup()
                         .addComponent(jLabel13)
                         .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.UNRELATED)
                         .addComponent(jRadioButton1)
@@ -1516,15 +1699,17 @@ public class Inicio extends javax.swing.JFrame {
                         .addComponent(jRadioButton2)
                         .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
                         .addComponent(jRadioButton4)
-                        .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.UNRELATED)
+                        .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
+                        .addComponent(jRadioButton14)
+                        .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
                         .addGroup(jPanel3Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
-                            .addComponent(jButton11)
-                            .addComponent(jButton12)))
-                    .addComponent(jScrollPane3, javax.swing.GroupLayout.PREFERRED_SIZE, 492, javax.swing.GroupLayout.PREFERRED_SIZE))
-                .addGap(0, 20, Short.MAX_VALUE))
+                            .addComponent(jButton12)
+                            .addComponent(jButton11)))
+                    .addComponent(jScrollPane10, javax.swing.GroupLayout.DEFAULT_SIZE, 189, Short.MAX_VALUE))
+                .addGap(6, 6, 6))
         );
 
-        jButton12.getAccessibleContext().setAccessibleName("Update");
+        jButton12.getAccessibleContext().setAccessibleName("Update ");
 
         jTabbedPane1.addTab("Generation", jPanel3);
         jPanel3.getAccessibleContext().setAccessibleName("");
@@ -1781,11 +1966,13 @@ public class Inicio extends javax.swing.JFrame {
     }
 
     /**
-     * Devuelve una lista de objetos Function correspondientes a los elementos
-     * seleccionados en un JComboBox de CheckComboItem.
+     * Returns a list of {@link Function} objects corresponding to the selected
+     * items in a {@link JComboBox} of {@link CheckComboItem}.
      *
-     * @param combo combo que contiene {@link CheckComboItem} con texto de función
-     * @return ArrayList de {@link Function} construido a partir de los items seleccionados
+     * @param combo the combo box containing {@link CheckComboItem} values with
+     * function names
+     * @return an {@link ArrayList} of {@link Function} built from the selected
+     * items
      */
     public ArrayList<Function> getSelectedFunctions(JComboBox<CheckComboItem> combo) {
         ArrayList<Function> selected = new ArrayList<>();
@@ -1800,11 +1987,12 @@ public class Inicio extends javax.swing.JFrame {
     }
 
     /**
-     * Marca como seleccionados en el combo los elementos que coincidan con la
-     * lista de funciones provista. Los items que no coincidan se desmarcan.
+     * Marks as selected the combo box items that match the provided function
+     * list. Non-matching items are unselected.
      *
-     * @param combo combo que contiene {@link CheckComboItem}
-     * @param functionsToSelect lista de {@link Function} que deben quedar seleccionadas
+     * @param combo the combo box containing {@link CheckComboItem}
+     * @param functionsToSelect list of {@link Function} instances that must
+     * remain selected
      */
     public void setSelectedFunctions(
             JComboBox<CheckComboItem> combo,
@@ -1829,9 +2017,9 @@ public class Inicio extends javax.swing.JFrame {
     }
 
     /**
-     * Deselecciona todos los elementos del combo de funciones (CheckComboItem).
+     * Unselects all items from a checkable functions combo box.
      *
-     * @param combo combo que contiene {@link CheckComboItem}
+     * @param combo the combo box containing {@link CheckComboItem} items
      */
     public void unSelectedFunctions(JComboBox<CheckComboItem> combo) {
         for (int i = 0; i < combo.getItemCount(); i++) {
@@ -1841,11 +2029,11 @@ public class Inicio extends javax.swing.JFrame {
     }
 
     /**
-     * Marca en el combo los items cuyo texto coincide con alguno de los valores
-     * del array proporcionado. Los demás items se desmarcan.
+     * Marks in the combo box the items whose text matches any of the values in
+     * the provided array. All other items are unselected.
      *
-     * @param combo combo que contiene {@link CheckComboItem}
-     * @param selectedItems array de textos que deben quedar seleccionados
+     * @param combo the combo box containing {@link CheckComboItem} items
+     * @param selectedItems array of labels that should remain selected
      */
     public void setSelectedItems(
             JComboBox<CheckComboItem> combo,
@@ -2302,6 +2490,10 @@ public class Inicio extends javax.swing.JFrame {
                     listModelImplicacionesList.addElement(implication.toString());
                     listModelImplicacionesListCR.addElement(implication.toStringCR());
                     jLabel11.setText("<html>The implication has been added successfully.</html>");
+                    jCheckBox1.setSelected(false);
+                    jCheckBox2.setSelected(false);
+                    jList2.ensureIndexIsVisible(listModelImplicacionesList.size() - 1);
+                    jList5.ensureIndexIsVisible(listModelImplicacionesListCR.size() - 1);
                 }
             } else {
                 colImplication.set(selectedIndexImplication, implication);
@@ -2510,6 +2702,9 @@ public class Inicio extends javax.swing.JFrame {
         if (matriz != null) {
             List<String> nodos = getNodosSeleccionados();
             if (nodos != null) {
+
+                cargarRelacionesGenerarTab(matriz, nodos);
+
                 if (jRadioButton1.isSelected()) {
                     representacionTipoTabla(matriz, nodos);
                 } else if (jRadioButton2.isSelected()) {
@@ -2518,9 +2713,178 @@ public class Inicio extends javax.swing.JFrame {
                     representacionTipoLatex(matriz, nodos);
                 } else if (jRadioButton4.isSelected()) {
                     representacionTipoExcel(matriz, nodos);
+                } else if (jRadioButton14.isSelected()) {
+                    representacionTipoTxt(matriz, nodos);
                 }
             }
         }
+    }
+
+    /**
+     * Handles the Update button on the Generation tab.
+     * <p>
+     * This does not change the currently selected representation (table/graph/etc.).
+     * It only refreshes the relationship lists shown on the right side by
+     * re-reading the currently selected matrix and node list.
+     * </p>
+     *
+     * @param evt the Swing action event triggered by clicking the button
+     */
+    private void jButton12ActionPerformed(java.awt.event.ActionEvent evt) {
+        int[][] matriz = getMatrizSeleccionada();
+        if (matriz != null) {
+            List<String> nodos = getNodosSeleccionados();
+            if (nodos != null) {
+                cargarRelacionesGenerarTab(matriz, nodos);
+            }
+        }
+    }
+
+    /**
+     * Populates a JList with relationships in the form {@code Node1 --> Node2}
+     * by scanning the implication matrix.
+     * <p>
+     * Assumes {@code matriz} is {@code N x N} and {@code nodos} has size
+     * {@code N}.
+     * </p>
+     *
+     * @param matriz implication/counter-implication matrix ({@code N x N})
+     * @param nodos list of node labels ({@code N})
+     * @throws IllegalArgumentException if the matrix is smaller than
+     * {@code N x N}
+     */
+    public void cargarRelacionesGenerarTab(int[][] matriz, List<String> nodos) {
+        int n = nodos.size();
+
+        listModelGeneration.removeAllElements();
+
+        // Minimal validation to avoid index errors
+        if (matriz == null || matriz.length < n || matriz[0].length < n) {
+            //System.err.println("Error: " + matriz.length + "x" + matriz[0].length);
+            //System.err.println("Error: " + nodos);
+            //System.err.println("Error: " + nodos.size());
+            throw new IllegalArgumentException("The matrix must be at least NxN to process the first quadrant.");
+        }
+
+        int pos = 1;
+
+        for (int i = 0; i < n; i++) {
+            for (int j = 0; j < n; j++) {
+
+                // Define the "there is a relation" condition here
+                // ( 1 = hay relación, 0 = no hay)
+                if (matriz[i][j] != 0) {
+                    //String rel = "[" + nodos.get(i) + "] --> [" + nodos.get(j) + "]";
+                    String rel = nodos.get(i) + " --> " + nodos.get(j);
+
+                    if (!jRadioButton9.isSelected()) {
+                        rel = pos + "|  " + rel;
+                    }
+
+                    pos++;
+                    listModelGeneration.addElement(rel);
+
+                }
+            }
+        }
+
+        if (jRadioButton9.isSelected()) {
+            DefaultListModel<String> total = listModelImplicacionesList;//defaultListModelSum(listModelImplicacionesList, listModelImplicacionesListCR);
+            jList8.setEnabled(true);
+            listModelGenerationCR.removeAllElements();
+            listModelGenerationCR = defaultListModelDiff(total, listModelGeneration);
+            //System.out.println("SIZEEE: : :  " + listModelGenerationCR.size());
+            jList8.setModel(listModelGenerationCR);
+        } else {
+            listModelGenerationCR.removeAllElements();
+            jList8.setEnabled(false);
+        }
+
+
+        pos = 1;
+        listModelGeneration.removeAllElements();
+        int imp = 0;
+        int new_imp = 0;
+        for (int i = 0; i < n; i++) {
+            for (int j = 0; j < n; j++) {
+                // Define the "there is a relation" condition here
+                // ( 1 = hay relación, 0 = no hay)
+                if (matriz[i][j] != 0) {
+                    //String rel = "[" + nodos.get(i) + "] --> [" + nodos.get(j) + "]";
+
+                    String rel_i = nodos.get(i) + " --> " + nodos.get(j);
+                    String rel = pos + "|  " + rel_i;
+
+                    if (listModelImplicacionesList.contains(rel_i)) {
+                        pos++;
+                        listModelGeneration.addElement(rel);
+                        imp ++;
+                    } else {
+                        String rel_ii = negarVariable(nodos.get(j)) + " --> " + negarVariable(nodos.get(i));
+                        if (!listModelImplicacionesList.contains(rel_ii)) {
+                            pos++;
+                            listModelGeneration.addElement(rel + " *");
+                            new_imp ++;
+                        }
+                    }
+
+                }
+            }
+        }
+        if (jRadioButton9.isSelected()) {
+            if (new_imp>0) {
+                updateInfoModelo(imp + " + " + new_imp);
+            }else{
+                updateInfoModelo(String.valueOf(imp));
+            }
+        }
+    }
+
+    /**
+     * Returns the logical negation of a node label.
+     * <p>
+     * Node labels represent literals as strings and use the prefix {@code "¬ "}
+     * (note the trailing space). If the prefix is present, it is removed;
+     * otherwise, it is added.
+     * </p>
+     *
+     * @param variable node label (e.g. {@code "[Tw = True]"} or {@code "¬ [Tw = True]"})
+     * @return the negated label
+     */
+    private String negarVariable(String variable) {
+        if (variable.contains("¬ ")) {
+            return variable.substring(2);
+        } else {
+            return "¬ " + variable;
+        }
+    }
+
+    /**
+     * Computes the set difference {@code a \ b} for two list models.
+     * <p>
+     * The resulting list keeps the iteration order from {@code a} and numbers
+     * each entry using the format {@code "pos|  element"}.
+     * </p>
+     *
+     * @param a base list model
+     * @param b elements to exclude from {@code a}
+     * @return a new list model containing all elements from {@code a} not present in {@code b}
+     */
+    private DefaultListModel<String> defaultListModelDiff(
+            DefaultListModel<String> a,
+            DefaultListModel<String> b) {
+
+        DefaultListModel<String> resultado = new DefaultListModel<>();
+        int pos = 1;
+        for (int i = 0; i < a.size(); i++) {
+            String elemento = a.get(i);
+
+            if (!defaultListModelContain(b, elemento)) {
+                resultado.addElement(pos + "|  " + elemento);
+                pos++;
+            }
+        }
+        return resultado;
     }
 
     /**
@@ -2544,6 +2908,7 @@ public class Inicio extends javax.swing.JFrame {
                 eventoTabImplicaciones();
                 break;
             case 5:
+                eventoTabImplicaciones();
                 eventoTabGeneracion();
                 break;
             default:
@@ -2559,9 +2924,8 @@ public class Inicio extends javax.swing.JFrame {
      * consistent.
      * </p>
      *
-     * @param evt the Swing action event triggered by clicking the button
      */
-    private void jButton12ActionPerformed(java.awt.event.ActionEvent evt) {
+    private void updateNewImplicationAfterReduction() {
         if (utils.getListMatrices() != null && !utils.getListMatrices().isEmpty()) {
 
             listModelLiterales1.clear();
@@ -2785,7 +3149,7 @@ public class Inicio extends javax.swing.JFrame {
                     }
                 }
                 break;
-            case 3: //Bool 
+            case 3: //Bool
                 Universe universe = new Universe(jTextField9.getText().trim(), (String) jComboBox5.getSelectedItem(), ALFunction, jCheckBox3.isSelected(), jCheckBox4.isSelected(), jCheckBox5.isSelected(), jCheckBox6.isSelected(), jCheckBox7.isSelected(), jCheckBox8.isSelected());
 
                 if ("Add".equals(jButton18.getText())) {
@@ -3322,13 +3686,13 @@ public class Inicio extends javax.swing.JFrame {
     }//GEN-LAST:event_jButton26ActionPerformed
 
     /**
-     * Maneja el botón Add en la pestaña Functions.
+     * Handles the Add button on the Functions tab.
      * <p>
-     * Valida nombre y aridad, evita duplicados y añade/edita la función en la
-     * colección correspondiente.
+     * Validates name and arity, prevents duplicates, and adds/edits the
+     * function in the corresponding collection.
      * </p>
      *
-     * @param evt evento de acción de Swing
+     * @param evt the Swing action event
      */
     private void jButton27ActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_jButton27ActionPerformed
         if (jTextField17.getText().isEmpty()) {
@@ -3364,12 +3728,12 @@ public class Inicio extends javax.swing.JFrame {
     }//GEN-LAST:event_jButton27ActionPerformed
 
     /**
-     * Maneja el botón Del en la pestaña Functions.
+     * Handles the Delete button on the Functions tab.
      * <p>
-     * Elimina la función seleccionada si existe una selección.
+     * Removes the currently selected function when a selection exists.
      * </p>
      *
-     * @param evt evento de acción de Swing
+     * @param evt the Swing action event
      */
     private void jButton28ActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_jButton28ActionPerformed
         int selectedIndex = jList6.getSelectedIndex();
@@ -3382,13 +3746,13 @@ public class Inicio extends javax.swing.JFrame {
     }//GEN-LAST:event_jButton28ActionPerformed
 
     /**
-     * Conmuta el modo edición/alta en la pestaña Functions.
+     * Toggles edit/add mode on the Functions tab.
      * <p>
-     * Carga la función seleccionada para edición o cancela la edición y limpia
-     * el formulario.
+     * Loads the selected function for editing, or cancels editing and clears
+     * the form.
      * </p>
      *
-     * @param evt evento de acción de Swing
+     * @param evt the Swing action event
      */
     private void jButton29ActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_jButton29ActionPerformed
         if (jButton29.getText().equals("Mode add")) {
@@ -3412,9 +3776,9 @@ public class Inicio extends javax.swing.JFrame {
     }//GEN-LAST:event_jButton29ActionPerformed
 
     /**
-     * Sube una posición la función seleccionada en la lista.
+     * Moves the selected function one position up in the list.
      *
-     * @param evt evento de acción de Swing
+     * @param evt the Swing action event
      */
     private void jButton30ActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_jButton30ActionPerformed
         int selectedIndex = jList6.getSelectedIndex();
@@ -3432,9 +3796,9 @@ public class Inicio extends javax.swing.JFrame {
     }//GEN-LAST:event_jButton30ActionPerformed
 
     /**
-     * Baja una posición la función seleccionada en la lista.
+     * Moves the selected function one position down in the list.
      *
-     * @param evt evento de acción de Swing
+     * @param evt the Swing action event
      */
     private void jButton31ActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_jButton31ActionPerformed
         int selectedIndex = jList6.getSelectedIndex();
@@ -3452,9 +3816,9 @@ public class Inicio extends javax.swing.JFrame {
     }//GEN-LAST:event_jButton31ActionPerformed
 
     /**
-     * Limpia completamente la lista de funciones.
+     * Clears the entire functions list.
      *
-     * @param evt evento de acción de Swing
+     * @param evt the Swing action event
      */
     private void jButton32ActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_jButton32ActionPerformed
         colFunction.empty();
@@ -3463,10 +3827,11 @@ public class Inicio extends javax.swing.JFrame {
     }//GEN-LAST:event_jButton32ActionPerformed
 
     /**
-     * Selecciona el modo Valor para el literal 1 y muestra el editor adecuado
-     * según el tipo del universo (combo, combo múltiple o campo numérico).
+     * Selects Value mode for literal 1 and shows the appropriate editor
+     * according to the universe type (combo box, multi-select combo or numeric
+     * field).
      *
-     * @param evt evento de acción de Swing
+     * @param evt the Swing action event
      */
     private void jRadioButton10ActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_jRadioButton10ActionPerformed
         Variable variable = colVariable.find((String) jComboBox1.getSelectedItem(), Variable::getNickname);
@@ -3486,10 +3851,9 @@ public class Inicio extends javax.swing.JFrame {
     }//GEN-LAST:event_jRadioButton10ActionPerformed
 
     /**
-     * Selecciona el modo Función para el literal 1 y muestra el selector de
-     * funciones.
+     * Selects Function mode for literal 1 and shows the functions selector.
      *
-     * @param evt evento de acción de Swing
+     * @param evt the Swing action event
      */
     private void jRadioButton11ActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_jRadioButton11ActionPerformed
         CardLayout cl = (CardLayout) jPanel11.getLayout();
@@ -3497,10 +3861,11 @@ public class Inicio extends javax.swing.JFrame {
     }//GEN-LAST:event_jRadioButton11ActionPerformed
 
     /**
-     * Selecciona el modo Valor para el literal 2 y muestra el editor adecuado
-     * según el tipo del universo (combo, combo múltiple o campo numérico).
+     * Selects Value mode for literal 2 and shows the appropriate editor
+     * according to the universe type (combo box, multi-select combo or numeric
+     * field).
      *
-     * @param evt evento de acción de Swing
+     * @param evt the Swing action event
      */
     private void jRadioButton12ActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_jRadioButton12ActionPerformed
         Variable variable = colVariable.find((String) jComboBox3.getSelectedItem(), Variable::getNickname);
@@ -3520,15 +3885,54 @@ public class Inicio extends javax.swing.JFrame {
     }//GEN-LAST:event_jRadioButton12ActionPerformed
 
     /**
-     * Selecciona el modo Función para el literal 2 y muestra el selector de
-     * funciones.
+     * Selects Function mode for literal 2 and shows the functions selector.
      *
-     * @param evt evento de acción de Swing
+     * @param evt the Swing action event
      */
     private void jRadioButton13ActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_jRadioButton13ActionPerformed
         CardLayout cl = (CardLayout) jPanel18.getLayout();
         cl.show(jPanel18, "card-comboFunc2");
     }//GEN-LAST:event_jRadioButton13ActionPerformed
+
+    /**
+     * Shows/hides the contrapositive implications list and resizes the main
+     * implications list accordingly.
+     * <p>
+     * When enabled, the UI shows two side-by-side lists: original implications
+     * and their contrapositives.
+     * </p>
+     *
+     * @param evt the Swing action event
+     */
+    private void jCheckBox9ActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_jCheckBox9ActionPerformed
+        jScrollPane7.setVisible(jCheckBox9.isSelected());
+
+        if (jCheckBox9.isSelected()) {
+            jScrollPane2.setPreferredSize(new Dimension(485, 224));
+        } else {
+            jScrollPane2.setPreferredSize(new Dimension(485, 490));
+        }
+        jScrollPane2.revalidate();
+        jScrollPane2.getParent().revalidate();
+        jScrollPane2.repaint();
+    }//GEN-LAST:event_jCheckBox9ActionPerformed
+
+    /**
+     * Handles changes in the model version selection combo box.
+     * <p>
+     * Clears the Generation tab list models, resets cached matrices/nodes in
+     * {@link GUI.utils}, and triggers a full model regeneration so that the UI
+     * reflects the newly selected generation/restoration algorithm.
+     * </p>
+     *
+     * @param evt the Swing action event triggered by changing the combo box selection
+     */
+    private void jComboBox9ActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_jComboBox9ActionPerformed
+        listModelGeneration.clear();
+        listModelGenerationCR.clear();
+        utils.emptyMatriz();
+        getInfoModelo();
+    }//GEN-LAST:event_jComboBox9ActionPerformed
 
     /**
      * Opens a new window showing the selected model matrix as a table.
@@ -3548,12 +3952,14 @@ public class Inicio extends javax.swing.JFrame {
      * @param nodos the list of node labels corresponding to the matrix indices
      */
     private void representacionTipoLatex(int[][] matriz, List<String> nodos) {
-        String msg = jTextArea1.getText();
-        msg += "\n\n-----------------------------------";
-        msg += "\nMODEL MATRIX IN LATEX FORMAT";
-        msg += "\n------------------------------------";
-        msg += "\n\n" + toLatex(matriz);
-        jTextArea1.setText(msg);
+        String msg = "";//jTextArea1.getText();
+        //msg += "\n\n-----------------------------------";
+        //msg += "\nMODEL MATRIX IN LATEX FORMAT";
+        //msg += "\n------------------------------------";
+        //msg += "\n\n";
+        msg += toLatex(matriz);
+        //jTextArea1.setText(msg);
+        VentanaLatex ventanaLatex = new VentanaLatex(msg);
     }
 
     /**
@@ -3590,6 +3996,57 @@ public class Inicio extends javax.swing.JFrame {
                 fileToSave = new File(fileToSave.getAbsolutePath() + ".csv");
             }
             String content = utils.generarTablaCSV(matriz, nodos);
+
+            try (BufferedWriter writer = new BufferedWriter(new FileWriter(fileToSave))) {
+                writer.write(content);
+                JOptionPane.showMessageDialog(this, "File saved at: " + fileToSave.getAbsolutePath());
+            } catch (IOException ex) {
+                JOptionPane.showMessageDialog(this, "Error saving file: " + ex.getMessage());
+            }
+        }
+    }
+
+    /**
+     * Exports the selected model matrix as a List TXT file of Implications.
+     *
+     */
+    private void representacionTipoTxt(int[][] matriz, List<String> nodos) {
+        JFileChooser fileChooser = new JFileChooser();
+        fileChooser.setDialogTitle("Save TXT File");
+        FileNameExtensionFilter filter = new FileNameExtensionFilter(
+                "Files with extension (*.txt)", "txt");
+        fileChooser.setFileFilter(filter);
+
+        int userSelection = fileChooser.showSaveDialog(this);
+
+        if (userSelection == JFileChooser.APPROVE_OPTION) {
+            File fileToSave = fileChooser.getSelectedFile();
+            String fileName = fileToSave.getName();
+            if (!fileName.endsWith(".txt")) {
+                fileToSave = new File(fileToSave.getAbsolutePath() + ".txt");
+            }
+            String content = "--- Implications ---\n\n";
+
+            for (Object element : listModelGeneration.toArray()) {
+                content += element.toString() + "\n";
+            }
+
+            if (jRadioButton9.isSelected()) {
+                content += "\n\n--- Delete implications ---\n\n";
+
+                for (Object element : listModelGenerationCR.toArray()) {
+                    String[] nodosArista = dividirAristaEnNodos(element.toString());
+                    String camino = caminoMinimo(matriz, nodos, nodosArista[0], nodosArista[1]);
+                    //System.out.println(nodosArista[0] + " - " + nodosArista[1]);
+                    content += element.toString();
+                    if (camino != null && !camino.isEmpty()) {
+                        content += "  ===> (" + camino + ")\n";
+                    } else {
+                        content += " (Error:: Sin camino)\n";
+                    }
+
+                }
+            }
 
             try (BufferedWriter writer = new BufferedWriter(new FileWriter(fileToSave))) {
                 writer.write(content);
@@ -3779,6 +4236,10 @@ public class Inicio extends javax.swing.JFrame {
             CombolistModelAlias1.addElement(listModelVariable.get(i).getNickname());
             CombolistModelAlias2.addElement(listModelVariable.get(i).getNickname());
         }
+
+        ordenarDefaultComboBoxModel(CombolistModelAlias1);
+        ordenarDefaultComboBoxModel(CombolistModelAlias2);
+
         utils.emptyMatriz();
     }
 
@@ -3804,9 +4265,13 @@ public class Inicio extends javax.swing.JFrame {
             if (utils.tieneCiclos()) {
                 jRadioButton6.setEnabled(true);
                 jRadioButton9.setEnabled(true);
+                jLabel7.setVisible(true);
+                jComboBox9.setVisible(true);
             } else {
                 jRadioButton6.setEnabled(false);
                 jRadioButton9.setEnabled(false);
+                jLabel7.setVisible(false);
+                jComboBox9.setVisible(false);
             }
         } else {
             jButton11.setEnabled(false);
@@ -3820,6 +4285,8 @@ public class Inicio extends javax.swing.JFrame {
             jRadioButton7.setEnabled(false);
             jRadioButton8.setEnabled(false);
             jRadioButton9.setEnabled(false);
+            jLabel7.setVisible(false);
+            jComboBox9.setVisible(false);
         }
     }
 
@@ -3837,16 +4304,12 @@ public class Inicio extends javax.swing.JFrame {
      */
     private List<int[][]> getInfoModelo() {
         String msg;
-        List<int[][]> matrices = utils.generarMatrices(listModelLiterales1, listModelLiterales2, listModelImplicacionesNot1, listModelImplicacionesNot2);
+        List<int[][]> matrices = utils.generarMatrices(listModelLiterales1, listModelLiterales2,
+                listModelImplicacionesNot1, listModelImplicacionesNot2,
+                jComboBox9.getSelectedIndex());
         if (matrices != null && !matrices.isEmpty()) {
 
-            msg = "The model contains cycles: " + (utils.tieneCiclos() ? "YES" : "NO");
-            msg += "\n\nNumber of concepts: " + colVariable.size();
-            msg += "\n\nNumber of nodes: " + utils.getNodos().size();
-            msg += "\n\nNumber of initial relations: " + utils.getNumeroAristas(matrices.get(0));// (listModelLiterales2.size() * 2);
-
-            msg += "\n\nNumber of final relations: " + utils.getNumeroAristas(matrices.get(matrices.size() - 1));
-            jTextArea1.setText(msg);
+            printInfoModelo(matrices);
 
             String error = utils.getError();
             if (error != null) {
@@ -3862,39 +4325,44 @@ public class Inicio extends javax.swing.JFrame {
     }
 
     /**
-     * Application entry point.
+     * Writes a small model summary into {@link #jTextArea1}.
      * <p>
-     * Sets the Nimbus look and feel when available and shows the main SynT
-     * frame on the Event Dispatch Thread.
+     * The summary includes whether cycles exist, the number of variables,
+     * literals and initial implications.
      * </p>
      *
-     * @param args command line arguments (not used)
+     * @param matrices list of generated model matrices; the first matrix
+     *                 ({@code matrices.get(0)}) is used to count the initial
+     *                 implications
      */
-    public static void main(String args[]) {
-        /* Set the Nimbus look and feel */
-        //<editor-fold defaultstate="collapsed" desc=" Look and feel setting code (optional) ">
-        /* If Nimbus (introduced in Java SE 6) is not available, stay with the default look and feel.
-         * For details see http://download.oracle.com/javase/tutorial/uiswing/lookandfeel/plaf.html 
-         */
-        try {
-            for (javax.swing.UIManager.LookAndFeelInfo info : javax.swing.UIManager.getInstalledLookAndFeels()) {
-                if ("Nimbus".equals(info.getName())) {
-                    javax.swing.UIManager.setLookAndFeel(info.getClassName());
-                    break;
-
-                }
-            }
-        } catch (ClassNotFoundException | InstantiationException | IllegalAccessException
-                | UnsupportedLookAndFeelException ex) {
-            java.util.logging.Logger.getLogger(Inicio.class
-                    .getName()).log(java.util.logging.Level.SEVERE, null, ex);
-
-        }
-        //</editor-fold>
-
-        /* Create and display the form */
-        java.awt.EventQueue.invokeLater(() -> new Inicio().setVisible(true));
+    private void printInfoModelo(List<int[][]> matrices) {
+        String msg;
+        msg = "The model contains cycles: " + (utils.tieneCiclos() ? "YES" : "NO");
+        msg += "\nNumber of variables: " + colVariable.size();
+        msg += "\nNumber of literals: " + utils.getNodos().size();
+        msg += "\nNumber of initial implications: " + (utils.getNumeroAristas(matrices.get(0)) / 2);
+        //msg += "\nNumber of final implications: " + utils.getNumeroAristas(matrices.get(matrices.size() - 1));
+        jTextArea1.setText(msg);
     }
+
+    /**
+     * Updates (or appends) the "Number of final implications" line in the text
+     * area summary.
+     *
+     * @param val value to show for the final implication count
+     */
+    private void updateInfoModelo(String val) {
+        String msg = jTextArea1.getText();
+        String new_msg = "\nNumber of final implications: ";
+
+        if (!msg.contains(new_msg)) {
+            msg += "\nNumber of final implications: " + val;
+        }else{
+            msg = msg.substring(0, msg.lastIndexOf(':')) + ": " + val;
+        }
+        jTextArea1.setText(msg);
+    }
+
 
     // Variables declaration - do not modify//GEN-BEGIN:variables
     private javax.swing.ButtonGroup buttonGroup1;
@@ -3941,6 +4409,7 @@ public class Inicio extends javax.swing.JFrame {
     private javax.swing.JCheckBox jCheckBox6;
     private javax.swing.JCheckBox jCheckBox7;
     private javax.swing.JCheckBox jCheckBox8;
+    private javax.swing.JCheckBox jCheckBox9;
     private javax.swing.JComboBox<String> jComboBox1;
     private javax.swing.JComboBox<String> jComboBox10;
     private javax.swing.JComboBox<CheckComboItem> jComboBox11;
@@ -3955,6 +4424,7 @@ public class Inicio extends javax.swing.JFrame {
     private javax.swing.JComboBox<String> jComboBox6;
     private javax.swing.JComboBox<String> jComboBox7;
     private javax.swing.JComboBox<CheckComboItem> jComboBox8;
+    private javax.swing.JComboBox<String> jComboBox9;
     private javax.swing.JLabel jLabel1;
     private javax.swing.JLabel jLabel11;
     private javax.swing.JLabel jLabel12;
@@ -3984,6 +4454,7 @@ public class Inicio extends javax.swing.JFrame {
     private javax.swing.JLabel jLabel4;
     private javax.swing.JLabel jLabel5;
     private javax.swing.JLabel jLabel6;
+    private javax.swing.JLabel jLabel7;
     private javax.swing.JLabel jLabel8;
     private javax.swing.JLabel jLabel9;
     private javax.swing.JList<String> jList1;
@@ -3992,6 +4463,8 @@ public class Inicio extends javax.swing.JFrame {
     private javax.swing.JList<String> jList4;
     private javax.swing.JList<String> jList5;
     private javax.swing.JList<String> jList6;
+    private javax.swing.JList<String> jList7;
+    private javax.swing.JList<String> jList8;
     private javax.swing.JMenu jMenu1;
     private javax.swing.JMenuBar jMenuBar1;
     private javax.swing.JMenuItem jMenuItem1;
@@ -4022,6 +4495,7 @@ public class Inicio extends javax.swing.JFrame {
     private javax.swing.JRadioButton jRadioButton11;
     private javax.swing.JRadioButton jRadioButton12;
     private javax.swing.JRadioButton jRadioButton13;
+    private javax.swing.JRadioButton jRadioButton14;
     private javax.swing.JRadioButton jRadioButton2;
     private javax.swing.JRadioButton jRadioButton3;
     private javax.swing.JRadioButton jRadioButton4;
@@ -4031,6 +4505,7 @@ public class Inicio extends javax.swing.JFrame {
     private javax.swing.JRadioButton jRadioButton8;
     private javax.swing.JRadioButton jRadioButton9;
     private javax.swing.JScrollPane jScrollPane1;
+    private javax.swing.JScrollPane jScrollPane10;
     private javax.swing.JScrollPane jScrollPane2;
     private javax.swing.JScrollPane jScrollPane3;
     private javax.swing.JScrollPane jScrollPane4;
@@ -4038,6 +4513,7 @@ public class Inicio extends javax.swing.JFrame {
     private javax.swing.JScrollPane jScrollPane6;
     private javax.swing.JScrollPane jScrollPane7;
     private javax.swing.JScrollPane jScrollPane8;
+    private javax.swing.JScrollPane jScrollPane9;
     private javax.swing.JSeparator jSeparator1;
     private javax.swing.JSeparator jSeparator2;
     private javax.swing.JSeparator jSeparator3;

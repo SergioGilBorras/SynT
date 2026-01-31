@@ -16,10 +16,7 @@ import models.Function;
 import models.Implication;
 import models.Universe;
 import models.Variable;
-import theorybuildingse.ArregloCiclos;
-import theorybuildingse.CycleDetectionDFSIterative;
-import theorybuildingse.TransitiveClosure;
-import theorybuildingse.TransitiveReduction;
+import theorybuildingse.*;
 
 /**
  * Utility class for building and analysing the implication model matrices used
@@ -151,20 +148,23 @@ public class utils {
      * <p>
      * This method builds the initial adjacency matrix from the literals and
      * their negation flags, detects cycles and then delegates to either
-     * {@link #generadorConCiclos(List)} or {@link #generadorSinCiclos(List)} to
-     * compute the subsequent matrices.
+     * {@link #generadorConCiclos(List, int)} or {@link #generadorSinCiclos(List)}
+     * to compute the subsequent matrices.
      * </p>
      *
      * @param listModelLiterales1 list of literal 1 strings
      * @param listModelLiterales2 list of literal 2 strings
      * @param listModelImplicacionesNot1 list of negation flags for literal 1
      * @param listModelImplicacionesNot2 list of negation flags for literal 2
+     * @param versionAR selects which cycle-expansion / restore implementation to
+     *                  use when cycles exist (e.g. 1 = V1, otherwise V2)
      * @return the list of generated matrices, or {@code null} if there is not
      * enough content to build a model
      */
     public static List<int[][]> generarMatrices(DefaultListModel<String> listModelLiterales1,
             DefaultListModel<String> listModelLiterales2, DefaultListModel<String> listModelImplicacionesNot1,
-            DefaultListModel<String> listModelImplicacionesNot2) {
+            DefaultListModel<String> listModelImplicacionesNot2,
+                                                int versionAR) {
         if (matrices == null) {
             List<String> nodosL = generarListaNodos(listModelLiterales1, listModelLiterales2, listModelImplicacionesNot1, listModelImplicacionesNot2);
             if (nodosL.size() > 1) {
@@ -187,7 +187,7 @@ public class utils {
                 tieneCiclos = CycleDetectionDFSIterative.hasCycle(matriz);
 
                 if (tieneCiclos) {
-                    generadorConCiclos(matrices);
+                    generadorConCiclos(matrices, versionAR);
                 } else {
                     generadorSinCiclos(matrices);
                 }
@@ -206,10 +206,14 @@ public class utils {
      *
      * @param matrices the list where the new matrices will be appended
      */
-    private static void generadorConCiclos(List<int[][]> matrices) {
+    private static void generadorConCiclos(List<int[][]> matrices, int version) {
         ArregloCiclos AR;
 
-        AR = new ArregloCiclos(matrices.get(0), utils.nodos);
+        if(version == 0) {
+            AR = new ArregloCiclosMapeado_V1(matrices.get(0), utils.nodos);
+        } else {
+            AR = new ArregloCiclosMapeado_V2(matrices.get(0), utils.nodos);
+        }
         matrices.add(AR.getMatrizFusionCiclos());
         utils.nodosReducidos = AR.getNodes();
 
@@ -217,7 +221,7 @@ public class utils {
         matrices.add(TransitiveReduction.computeTransitiveReduction(matrices.get(2)));
 
         try {
-            matrices.add(AR.restaurarCiclos(matrices.get(3)));
+            matrices.add(AR.restaurarCiclos(matrices.get(0), matrices.get(3), utils.nodos));
         } catch (Exception ex) {
             error = "An error occurred while generating the matrices: " + ex.getMessage();
             ex.printStackTrace();
@@ -405,9 +409,9 @@ public class utils {
             CSV.append(s).append(";");
         }
         CSV.append("\n");
-        for (int i = 0; i < matrizL.length; i++) {
+        for (int i = 0; i < nodosL.size(); i++) {
             CSV.append(nodosL.get(i)).append(";");
-            for (int j = 0; j < matrizL[i].length; j++) {
+            for (int j = 0; j < nodosL.size(); j++) {
                 CSV.append(matrizL[i][j]).append(";");
             }
             CSV.append("\n");
@@ -457,5 +461,85 @@ public class utils {
         }
 
         return false;
+    }
+
+    /**
+     * Splits a textual edge description into its source and target node labels.
+     * <p>
+     * Expected formats include lines like "48|  ¬ [Tw = True] --> [Rs > 5]" or
+     * simply "¬ [Tw = True] --> [Rs > 5]". Any prefix before the first '|' is
+     * discarded. The remaining string is split on the first "-->" and both
+     * sides are trimmed.
+     * </p>
+     *
+     * @param linea edge description line
+     * @return a two-element array: [origen, destino]
+     * @throws IllegalArgumentException if the line cannot be split into two parts
+     */
+    public static String[] dividirAristaEnNodos(String linea) {
+        if (linea == null) {
+            throw new IllegalArgumentException("linea no puede ser null");
+        }
+        String trabajo = linea;
+        int barra = trabajo.indexOf('|');
+        if (barra >= 0) {
+            trabajo = trabajo.substring(barra + 1);
+        }
+        String[] partes = trabajo.split("-->", 2);
+        if (partes.length != 2) {
+            throw new IllegalArgumentException("Formato de arista invalido: " + linea);
+        }
+        return new String[]{partes[0].trim(), partes[1].trim()};
+    }
+
+    /**
+     * Computes the unweighted shortest path between two node labels and formats
+     * it as "A --> B --> C". Returns {@code null} if no path exists.
+     *
+     * @param matriz adjacency matrix aligned with {@code nodosL}
+     * @param nodosL list of node labels
+     * @param origen label of the source node
+     * @param destino label of the target node
+     * @return formatted path or {@code null} if unreachable
+     */
+    public static String caminoMinimo(int[][] matriz, List<String> nodosL, String origen, String destino) {
+        if (matriz == null || nodosL == null || origen == null || destino == null) {
+            throw new IllegalArgumentException("Argumentos no pueden ser null");
+        }
+        int n = nodosL.size();
+        if (matriz.length != n || matriz[0].length != n) {
+            throw new IllegalArgumentException("Dimensiones de la matriz no coinciden con nodosL");
+        }
+        int s = nodosL.indexOf(origen);
+        int t = nodosL.indexOf(destino);
+        if (s < 0 || t < 0) {
+            throw new IllegalArgumentException("Origen o destino no se encuentran en nodosL");
+        }
+        int[] prev = new int[n];
+        java.util.Arrays.fill(prev, -1);
+        boolean[] vis = new boolean[n];
+        Queue<Integer> q = new LinkedList<>();
+        q.add(s);
+        vis[s] = true;
+        while (!q.isEmpty()) {
+            int u = q.poll();
+            if (u == t) break;
+            for (int v = 0; v < n; v++) {
+                if (matriz[u][v] > 0 && !vis[v]) {
+                    vis[v] = true;
+                    prev[v] = u;
+                    q.add(v);
+                }
+            }
+        }
+        if (!vis[t]) {
+            return null; // sin camino
+        }
+        List<String> path = new ArrayList<>();
+        for (int v = t; v != -1; v = prev[v]) {
+            path.add(nodosL.get(v));
+        }
+        Collections.reverse(path);
+        return String.join(" --> ", path);
     }
 }
