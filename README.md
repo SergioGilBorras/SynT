@@ -36,7 +36,7 @@ With SynT you can:
 
 - Define **constructs**, **universes** and **variables**.
 - Define logical relationships as **implications**.
-- Display the **canonical set** of resulting hypotheses as well as those that have been detected as redundant. 
+- Calculate and display the **canonical set** of resulting hypotheses as well as those that have been detected as redundant. 
 - Display this data in different formats: **tables**, **graphs**, **LaTeX matrices**, or export to **CSV**. In addition, the results of applying each of the steps defined by the algorithm to obtain the canonical set (initial, reduced cycles, transitive closure, transitive reduction, expanded cycles) can be displayed.
 
 
@@ -159,8 +159,7 @@ Use this tab to define the universes (types + allowed relations/values).
   - `Bool`
 - **Value (Separated by ',')** (only for Enum types): list of allowed enum values.
 - **Min value / Max value** (only for Real): numeric range.
-- **Function name**: function/semantic identifier.
-- **Arity**: integer.
+- **Functions**: select functions defined in the Functions tab that are allowed in this universe.
 
 **Relation checkboxes** (allowed operators for the universe)
 
@@ -249,7 +248,7 @@ Each literal is defined by:
 **Implication lists**
 
 - Upper list: implications as entered.
-- Lower list: contrapositive/cycle-reduced representation.
+- Lower list: counter reciprocal representation.
 
 These two lists are synchronized: selecting an item in one selects the corresponding item in the other.
 
@@ -364,4 +363,4 @@ This project is licensed under **Creative Commons Attribution-NonCommercial 4.0 
 
 Suggested attribution:
 
-> SynT (A software tool for automating the theory synthesis process) — Authors: Sergio Gil Borrás, Jorge Enrique Pérez Martinez, Jéssica Díaz Fernández, Ángel González Prieto.
+> SynT (A software tool for automating the theory synthesis process) — Authors: Sergio Gil Borrás, Jorge Enrique Pérez Martinez, Ángel González Prieto, Jéssica Díaz Fernández.
